@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShieldCheck, Search, UserPlus } from "lucide-react";
+import { ShieldCheck, Search, UserPlus, Building2, Handshake, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,13 +12,12 @@ export default function Home() {
         <div className="container mx-auto flex flex-col items-center px-4 text-center">
           <ShieldCheck className="mb-4 h-16 w-16" />
           <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-            SecureHire
+            GetSecure
           </h1>
-          <p className="mb-8 max-w-2xl text-lg text-blue-100 md:text-xl">
-            Your trusted platform for finding and hiring professional security
-            guards and bouncers. Fast, reliable, and secure.
+          <p className="mb-8 max-w-3xl text-lg text-blue-100 md:text-xl">
+            Your trusted platform for hiring professional security guards and for guards to find their next job. Fast, reliable, and secure.
           </p>
-          <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <Button asChild size="lg" variant="secondary" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <Link href="/search">
                 <Search className="mr-2 h-5 w-5" /> Find a Guard
@@ -27,6 +26,11 @@ export default function Home() {
             <Button asChild size="lg" variant="outline" className="border-accent text-accent-foreground bg-primary hover:bg-accent hover:text-accent-foreground hover:border-transparent">
                <Link href="/register">
                 <UserPlus className="mr-2 h-5 w-5" /> Register as Guard
+              </Link>
+            </Button>
+             <Button asChild size="lg" variant="outline" className="border-accent text-accent-foreground bg-primary hover:bg-accent hover:text-accent-foreground hover:border-transparent">
+               <Link href="/register-company">
+                <Building2 className="mr-2 h-5 w-5" /> Post a Job
               </Link>
             </Button>
           </div>
@@ -43,14 +47,13 @@ export default function Home() {
             <Card className="text-center shadow-md">
               <CardHeader>
                 <div className="mb-4 flex justify-center">
-                  <UserPlus className="h-12 w-12 text-primary" />
+                  <ClipboardList className="h-12 w-12 text-primary" />
                 </div>
-                <CardTitle>1. Guards Register</CardTitle>
+                <CardTitle>1. Create a Profile</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Security professionals create detailed profiles showcasing
-                  their experience and skills.
+                  Security professionals and companies create detailed profiles to showcase skills or post jobs.
                 </p>
               </CardContent>
             </Card>
@@ -59,26 +62,24 @@ export default function Home() {
                 <div className="mb-4 flex justify-center">
                   <Search className="h-12 w-12 text-primary" />
                 </div>
-                <CardTitle>2. Clients Search</CardTitle>
+                <CardTitle>2. Search & Apply</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Clients easily search for guards based on location,
-                  availability, and specific needs.
+                  Clients find guards based on needs. Guards search and apply for jobs from top companies.
                 </p>
               </CardContent>
             </Card>
             <Card className="text-center shadow-md">
               <CardHeader>
                 <div className="mb-4 flex justify-center">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary h-12 w-12"><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M9 16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-4 4z"/></svg>
+                   <Handshake className="text-primary h-12 w-12"/>
                 </div>
-                <CardTitle>3. Book & Communicate</CardTitle>
+                <CardTitle>3. Hire & Connect</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Connect directly, discuss details, and securely book the
-                  right guard for your needs.
+                  Connect directly, discuss details, and securely book guards or schedule interviews.
                 </p>
               </CardContent>
             </Card>
@@ -96,7 +97,7 @@ export default function Home() {
             <div className="flex items-start space-x-4">
               <ShieldCheck className="mt-1 h-6 w-6 flex-shrink-0 text-accent" />
               <div>
-                <h3 className="mb-1 text-lg font-semibold">Verified Guards</h3>
+                <h3 className="mb-1 text-lg font-semibold">Verified Professionals</h3>
                 <p className="text-muted-foreground">
                   Profiles include experience, certifications, and ratings for
                   trustworthy hires.
@@ -108,7 +109,7 @@ export default function Home() {
               <div>
                 <h3 className="mb-1 text-lg font-semibold">Location Based Search</h3>
                 <p className="text-muted-foreground">
-                  Find guards available in your specific area quickly and
+                  Find guards or jobs available in your specific area quickly and
                   efficiently.
                 </p>
               </div>
@@ -116,7 +117,7 @@ export default function Home() {
             <div className="flex items-start space-x-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-1 h-6 w-6 flex-shrink-0 text-accent"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
               <div>
-                <h3 className="mb-1 text-lg font-semibold">Easy Booking</h3>
+                <h3 className="mb-1 text-lg font-semibold">Easy Booking & Applying</h3>
                 <p className="text-muted-foreground">
                   Streamlined booking process with clear communication
                   channels.
@@ -128,7 +129,7 @@ export default function Home() {
               <div>
                 <h3 className="mb-1 text-lg font-semibold">Direct Communication</h3>
                 <p className="text-muted-foreground">
-                  Chat directly with guards to discuss requirements before confirming.
+                  Chat directly with guards or companies to discuss requirements.
                 </p>
               </div>
             </div>
@@ -159,9 +160,9 @@ export default function Home() {
          <div className="container mx-auto flex flex-col items-center px-4 text-center">
              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Ready to get started?</h2>
              <p className="mb-8 max-w-xl text-lg text-muted-foreground">
-                Whether you need security or you are security, SecureHire connects you.
+                Whether you need security or you are security, GetSecure connects you.
              </p>
-             <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+             <div className="flex flex-col gap-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                  <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
                      <Link href="/search">
                          <Search className="mr-2 h-5 w-5" /> Find a Guard Now
@@ -170,6 +171,11 @@ export default function Home() {
                  <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                       <Link href="/register">
                          <UserPlus className="mr-2 h-5 w-5" /> Join as a Guard
+                     </Link>
+                 </Button>
+                  <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                      <Link href="/register-company">
+                         <Building2 className="mr-2 h-5 w-5" /> Post a Job
                      </Link>
                  </Button>
              </div>

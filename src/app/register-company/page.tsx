@@ -18,55 +18,47 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserPlus, ShieldCheck } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import Link from 'next/link';
 
-// Define Zod schema for validation
+
 const formSchema = z.object({
-  fullName: z.string().min(2, {
-    message: 'Full name must be at least 2 characters.',
+  companyName: z.string().min(2, {
+    message: 'Company name must be at least 2 characters.',
   }),
   email: z.string().email({ message: 'Invalid email address.' }),
-  phone: z.string().min(10, { message: 'Phone number must be at least 10 digits.' }).regex(/^\+?[0-9\s-]+$/, {message: "Invalid phone number format."}),
-  experienceYears: z.coerce.number().min(0, { message: 'Experience must be a positive number.' }),
-  hourlyRate: z.coerce.number().min(0, { message: 'Hourly rate must be a positive number.' }),
-  bio: z.string().max(500, { message: 'Bio must not exceed 500 characters.' }).optional(),
-  certifications: z.string().optional(),
+  website: z.string().url({ message: 'Invalid URL.' }).optional().or(z.literal('')),
   location: z.string().min(2, { message: 'Location is required.' }),
+  description: z.string().max(1000, { message: 'Description must not exceed 1000 characters.' }).optional(),
   agreeTerms: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the terms and conditions.',
   }),
-  // Add more fields as needed: availability, skills (checkboxes/multi-select), profile picture upload
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function RegisterPage() {
+export default function RegisterCompanyPage() {
   const { toast } = useToast();
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: '',
+      companyName: '',
       email: '',
-      phone: '',
-      experienceYears: 0,
-      hourlyRate: 15, // Example default
-      bio: '',
-      certifications: '',
+      website: '',
       location: '',
+      description: '',
       agreeTerms: false,
     },
   });
 
   function onSubmit(values: FormData) {
-    // TODO: Implement actual registration logic (e.g., API call)
+    // TODO: Implement actual company registration logic (e.g., API call)
     console.log(values);
     toast({
-      title: 'Registration Submitted!',
-      description: 'Your profile is being created. We will notify you upon approval.',
-      variant: 'default', // or 'success' if you add that variant
+      title: 'Company Registration Submitted!',
+      description: 'Your company profile is being created. We will be in touch soon.',
+      variant: 'default',
     });
-    // Optionally reset form or redirect
     // form.reset();
   }
 
@@ -75,11 +67,11 @@ export default function RegisterPage() {
       <Card className="shadow-lg">
         <CardHeader className="text-center">
            <div className="mb-4 flex justify-center">
-              <UserPlus className="h-12 w-12 text-primary" />
+              <Building2 className="h-12 w-12 text-primary" />
            </div>
-          <CardTitle className="text-3xl font-bold">Register as a Guard</CardTitle>
+          <CardTitle className="text-3xl font-bold">Register Your Company</CardTitle>
           <CardDescription>
-            Join GetSecure and start getting booked for security jobs. Fill out your profile below.
+            Join GetSecure to find top security talent. Post jobs and connect with professionals.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,12 +79,12 @@ export default function RegisterPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="fullName"
+                name="companyName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>Company Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder="e.g., Acme Security Corp" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,9 +96,9 @@ export default function RegisterPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel>Work Email Address</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="you@example.com" {...field} />
+                        <Input type="email" placeholder="hr@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -114,41 +106,12 @@ export default function RegisterPage() {
                 />
                 <FormField
                   control={form.control}
-                  name="phone"
+                  name="website"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel>Company Website (Optional)</FormLabel>
                       <FormControl>
-                        <Input type="tel" placeholder="+1 123-456-7890" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                 <FormField
-                  control={form.control}
-                  name="experienceYears"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Years of Experience</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" placeholder="e.g., 5" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="hourlyRate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Hourly Rate ($)</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" step="0.01" placeholder="e.g., 25.50" {...field} />
+                        <Input placeholder="https://example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -161,13 +124,10 @@ export default function RegisterPage() {
                 name="location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Primary Service Area / City</FormLabel>
+                    <FormLabel>Headquarters / Main Office</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Los Angeles, CA" {...field} />
+                      <Input placeholder="e.g., San Francisco, CA" {...field} />
                     </FormControl>
-                     <FormDescription>
-                        The main location where you are available for work.
-                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -175,13 +135,13 @@ export default function RegisterPage() {
 
               <FormField
                 control={form.control}
-                name="bio"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Short Bio</FormLabel>
+                    <FormLabel>Company Description</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Tell clients about yourself, your skills, and experience (max 500 characters)"
+                        placeholder="Tell potential hires about your company, culture, and what you do."
                         className="resize-none"
                         {...field}
                       />
@@ -190,25 +150,6 @@ export default function RegisterPage() {
                   </FormItem>
                 )}
               />
-
-               <FormField
-                control={form.control}
-                name="certifications"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Certifications (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., CPR Certified, Security License #123" {...field} />
-                    </FormControl>
-                     <FormDescription>
-                        List any relevant certifications or licenses you hold.
-                     </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* TODO: Add fields for availability, skills, profile picture */}
 
               <FormField
                 control={form.control}
@@ -243,8 +184,8 @@ export default function RegisterPage() {
               />
 
               <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                <ShieldCheck className="mr-2 h-5 w-5" />
-                Register Profile
+                <Building2 className="mr-2 h-5 w-5" />
+                Register Company Profile
               </Button>
             </form>
           </Form>

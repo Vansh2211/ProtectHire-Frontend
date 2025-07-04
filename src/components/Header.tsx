@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, ShieldCheck, Search, UserPlus } from "lucide-react";
+import { Menu, ShieldCheck, Search, UserPlus, Building2 } from "lucide-react";
 
 export default function Header() {
   return (
@@ -11,7 +11,7 @@ export default function Header() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <ShieldCheck className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
-              SecureHire
+              GetSecure
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -25,9 +25,14 @@ export default function Header() {
               href="/register"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
-              Register as Guard
+              Guard Registration
             </Link>
-             {/* Add more links as needed, e.g., Dashboard, Profile */}
+             <Link
+              href="/register-company"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              For Companies
+            </Link>
           </nav>
         </div>
         <Sheet>
@@ -47,7 +52,7 @@ export default function Header() {
               className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
             >
               <ShieldCheck className="h-6 w-6 text-primary" />
-              <span className="font-bold">SecureHire</span>
+              <span className="font-bold">GetSecure</span>
             </Link>
             <div className="space-y-4 py-6">
               <Link
@@ -62,18 +67,20 @@ export default function Header() {
                 className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
               >
                 <UserPlus className="mr-2 h-4 w-4" />
-                Register as Guard
+                Guard Registration
               </Link>
-              {/* Add more mobile links */}
+              <Link
+                href="/register-company"
+                className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+              >
+                <Building2 className="mr-2 h-4 w-4" />
+                For Companies
+              </Link>
             </div>
           </SheetContent>
         </Sheet>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           {/* Optional: Add Login/Signup or User Avatar here */}
-          {/* Example:
-          <Button variant="ghost">Login</Button>
-          <Button className="bg-accent hover:bg-accent/90">Sign Up</Button>
-          */}
         </div>
       </div>
     </header>

@@ -8,8 +8,8 @@ import Header from "@/components/Header"; // Import Header
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "SecureHire",
-  description: "Hire security guards and bouncers on demand.",
+  title: "GetSecure",
+  description: "Hire security guards and bouncers, or find security jobs on demand.",
 };
 
 export default function RootLayout({

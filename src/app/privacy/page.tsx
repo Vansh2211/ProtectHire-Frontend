@@ -6,10 +6,10 @@ export default function PrivacyPage() {
         <p>Last updated: [Date]</p>
 
         <p>
-          [Your Company Name] (&quot;SecureHire,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is
+          GetSecure (&quot;GetSecure,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is
           committed to protecting your privacy. This Privacy Policy explains how
           we collect, use, disclose, and safeguard your information when you use
-          our SecureHire platform, including our website and mobile applications
+          our GetSecure platform, including our website and mobile applications
           (collectively, the &quot;Service&quot;). Please read this privacy policy
           carefully. If you do not agree with the terms of this privacy policy,
           please do not access the Service.
