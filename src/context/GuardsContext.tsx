@@ -15,6 +15,7 @@ export interface Guard {
   skills: string[];
   image: string;
   dataAiHint: string;
+  bio?: string;
 }
 
 // This is the data structure from the registration form
@@ -26,16 +27,17 @@ export interface NewGuardData {
   hourlyRate?: number;
   dailyRate?: number;
   monthlyRate?: number;
+  bio?: string;
 }
 
 
 // Mock data for initial guards
 const mockGuards: Guard[] = [
-  { id: '1', name: 'Aarav Sharma', location: 'Mumbai, MH', hourlyRate: 500, dailyRate: 3500, rating: 4.8, experience: 5, skills: ['cpr', 'first_aid'], image: 'https://placehold.co/300x200.png', dataAiHint: "person portrait" },
-  { id: '2', name: 'Priya Patel', location: 'Delhi, DL', hourlyRate: 450, monthlyRate: 90000, rating: 4.5, experience: 3, skills: ['crowd_control'], image: 'https://placehold.co/300x200.png', dataAiHint: "security guard" },
-  { id: '3', name: 'Vikram Singh', location: 'Bangalore, KA', dailyRate: 4000, monthlyRate: 100000, rating: 4.9, experience: 8, skills: ['cpr', 'first_aid', 'crowd_control'], image: 'https://placehold.co/300x200.png', dataAiHint: "bouncer professional" },
-  { id: '4', name: 'Ananya Gupta', location: 'Mumbai, MH', hourlyRate: 550, rating: 4.6, experience: 4, skills: ['first_aid'], image: 'https://placehold.co/300x200.png', dataAiHint: "woman security" },
-  { id: '5', name: 'Rohan Joshi', location: 'Pune, MH', hourlyRate: 480, dailyRate: 3800, rating: 4.7, experience: 6, skills: ['crowd_control', 'vip_protection'], image: 'https://placehold.co/300x200.png', dataAiHint: "man security" },
+  { id: '1', name: 'Aarav Sharma', location: 'Mumbai, MH', hourlyRate: 500, dailyRate: 3500, rating: 4.8, experience: 5, skills: ['cpr', 'first_aid'], image: 'https://placehold.co/300x200.png', dataAiHint: "person portrait", bio: "Ex-military professional with over 5 years of experience in corporate and event security. Adept at threat assessment and crisis management." },
+  { id: '2', name: 'Priya Patel', location: 'Delhi, DL', hourlyRate: 450, monthlyRate: 90000, rating: 4.5, experience: 3, skills: ['crowd_control'], image: 'https://placehold.co/300x200.png', dataAiHint: "security guard", bio: "Skilled in managing large crowds for events and public gatherings. Quick to de-escalate conflicts and ensure a safe environment." },
+  { id: '3', name: 'Vikram Singh', location: 'Bangalore, KA', dailyRate: 4000, monthlyRate: 100000, rating: 4.9, experience: 8, skills: ['cpr', 'first_aid', 'crowd_control', 'vip_protection'], image: 'https://placehold.co/300x200.png', dataAiHint: "bouncer professional", bio: "8 years of comprehensive security experience, including VIP protection for high-profile clients. Certified in advanced first aid and defensive driving." },
+  { id: '4', name: 'Ananya Gupta', location: 'Mumbai, MH', hourlyRate: 550, rating: 4.6, experience: 4, skills: ['first_aid'], image: 'https://placehold.co/300x200.png', dataAiHint: "woman security", bio: "Vigilant and professional with experience in retail and residential security. Excellent communication skills and a customer-friendly approach." },
+  { id: '5', name: 'Rohan Joshi', location: 'Pune, MH', hourlyRate: 480, dailyRate: 3800, rating: 4.7, experience: 6, skills: ['crowd_control', 'vip_protection'], image: 'https://placehold.co/300x200.png', dataAiHint: "man security", bio: "Specializes in executive protection and surveillance. Discreet, reliable, and highly trained to handle high-pressure situations." },
 ];
 
 
@@ -65,6 +67,7 @@ export const GuardsProvider = ({ children }: { children: ReactNode }) => {
       skills: guardData.certifications ? guardData.certifications.split(',').map(s => s.trim().toLowerCase().replace(/\s+/g, '_')) : [],
       image: `https://placehold.co/300x200.png`,
       dataAiHint: "person security",
+      bio: guardData.bio,
     };
     setGuards(prevGuards => [...prevGuards, newGuard]);
   };

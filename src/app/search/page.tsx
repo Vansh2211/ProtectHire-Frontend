@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getCurrentLocation, type Location } from '@/services/geolocation'; 
 import { useGuards, type Guard } from '@/context/GuardsContext';
+import Link from 'next/link';
 
 
 // Define types
@@ -217,8 +218,8 @@ export default function SearchPage() {
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
                     <Card key={i} className="overflow-hidden">
-                       <CardHeader className="p-0">
-                          <Skeleton className="h-48 w-full" />
+                       <CardHeader className="p-0 h-48">
+                          <Skeleton className="h-full w-full" />
                        </CardHeader>
                        <CardContent className="p-4 space-y-2">
                           <Skeleton className="h-6 w-3/4" />
@@ -235,13 +236,13 @@ export default function SearchPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredGuards.map(guard => (
                 <Card key={guard.id} className="overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 flex flex-col">
-                  <CardHeader className="p-0 relative">
+                  <CardHeader className="p-0 relative h-48">
                     <Image
                       src={guard.image}
                       alt={`Profile of ${guard.name}`}
-                      width={300}
-                      height={200}
-                      className="w-full h-48 object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       data-ai-hint={guard.dataAiHint}
                     />
                      <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs flex items-center">
@@ -273,9 +274,10 @@ export default function SearchPage() {
                      </div>
                   </CardContent>
                   <CardFooter className="p-4 border-t">
-                     {/* TODO: Link to Guard Profile/Booking page */}
-                    <Button className="w-full bg-accent hover:bg-accent/90">
-                      View Profile & Book
+                    <Button asChild className="w-full bg-accent hover:bg-accent/90">
+                      <Link href={`/guard/${guard.id}`}>
+                        View Profile & Book
+                      </Link>
                     </Button>
                   </CardFooter>
                 </Card>
