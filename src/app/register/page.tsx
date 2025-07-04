@@ -20,6 +20,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserPlus, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useGuards } from '@/context/GuardsContext';
 
 // Preprocessing for optional number fields to handle empty strings
 const emptyStringToUndefined = z.preprocess((val) => {
@@ -53,6 +55,9 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function RegisterPage() {
   const { toast } = useToast();
+  const router = useRouter();
+  const { addGuard } = useGuards();
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,15 +73,13 @@ export default function RegisterPage() {
   });
 
   function onSubmit(values: FormData) {
-    // TODO: Implement actual registration logic (e.g., API call)
-    console.log(values);
+    addGuard(values);
     toast({
       title: 'Registration Successful!',
       description: 'Your profile has been created and is now live.',
       variant: 'default',
     });
-    // Optionally reset form or redirect
-    // form.reset();
+    router.push('/search');
   }
 
   return (
@@ -244,7 +247,7 @@ export default function RegisterPage() {
                       <Input placeholder="e.g., PSARA License, CPR Certified" {...field} />
                     </FormControl>
                      <FormDescription>
-                        List any relevant certifications or licenses you hold.
+                        List any relevant certifications or licenses you hold. Separate with commas.
                      </FormDescription>
                     <FormMessage />
                   </FormItem>

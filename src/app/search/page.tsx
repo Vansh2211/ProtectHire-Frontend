@@ -5,39 +5,17 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getCurrentLocation, type Location } from '@/services/geolocation'; // Assuming you have this service
+import { getCurrentLocation, type Location } from '@/services/geolocation'; 
+import { useGuards, type Guard } from '@/context/GuardsContext';
 
-// Mock data for guards - replace with actual API fetch
-const mockGuards = [
-  { id: '1', name: 'Aarav Sharma', location: 'Mumbai, MH', hourlyRate: 500, dailyRate: 3500, rating: 4.8, experience: 5, skills: ['cpr', 'first_aid'], image: 'https://picsum.photos/200/200?random=1', dataAiHint: "person portrait" },
-  { id: '2', name: 'Priya Patel', location: 'Delhi, DL', hourlyRate: 450, monthlyRate: 90000, rating: 4.5, experience: 3, skills: ['crowd_control'], image: 'https://picsum.photos/200/200?random=2', dataAiHint: "security guard" },
-  { id: '3', name: 'Vikram Singh', location: 'Bangalore, KA', dailyRate: 4000, monthlyRate: 100000, rating: 4.9, experience: 8, skills: ['cpr', 'first_aid', 'crowd_control'], image: 'https://picsum.photos/200/200?random=3', dataAiHint: "bouncer professional" },
-  { id: '4', name: 'Ananya Gupta', location: 'Mumbai, MH', hourlyRate: 550, rating: 4.6, experience: 4, skills: ['first_aid'], image: 'https://picsum.photos/200/200?random=4', dataAiHint: "woman security" },
-  { id: '5', name: 'Rohan Joshi', location: 'Pune, MH', hourlyRate: 480, dailyRate: 3800, rating: 4.7, experience: 6, skills: ['crowd_control', 'vip_protection'], image: 'https://picsum.photos/200/200?random=5', dataAiHint: "man security" },
-];
 
 // Define types
-interface Guard {
-  id: string;
-  name: string;
-  location: string;
-  hourlyRate?: number;
-  dailyRate?: number;
-  monthlyRate?: number;
-  rating: number;
-  experience: number;
-  skills: string[];
-  image: string;
-  dataAiHint: string;
-}
-
 interface Filters {
   location: string;
   maxRate: number;
@@ -47,7 +25,7 @@ interface Filters {
 }
 
 export default function SearchPage() {
-  const [guards, setGuards] = useState<Guard[]>([]);
+  const { guards } = useGuards();
   const [filteredGuards, setFilteredGuards] = useState<Guard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
@@ -61,7 +39,6 @@ export default function SearchPage() {
   const [userLocation, setUserLocation] = useState<Location | null>(null);
 
   useEffect(() => {
-    // Fetch user's current location
     getCurrentLocation()
       .then(location => {
         setUserLocation(location);
@@ -71,17 +48,15 @@ export default function SearchPage() {
         console.error("Error getting location:", error);
       });
 
-    // Simulate fetching guards data
+    // Simulate loading, data comes from context
     const timer = setTimeout(() => {
-      setGuards(mockGuards);
-      setFilteredGuards(mockGuards); // Initially show all guards
       setIsLoading(false);
-    }, 1500); // Simulate network delay
+    }, 500); 
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Apply filters whenever filters or guards change
+  // Apply filters whenever filters or guards from context change
    useEffect(() => {
     if (!isLoading) {
       let result = guards;
