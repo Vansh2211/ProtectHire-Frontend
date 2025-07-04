@@ -71,8 +71,8 @@ export default function RegisterPage() {
     // TODO: Implement actual registration logic (e.g., API call)
     console.log(values);
     toast({
-      title: 'Registration Submitted!',
-      description: 'Your profile is being created. We will notify you upon approval.',
+      title: 'Registration Successful!',
+      description: 'Your profile has been created and is now live.',
       variant: 'default',
     });
     // Optionally reset form or redirect
