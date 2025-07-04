@@ -29,6 +29,9 @@ const emptyStringToUndefined = z.preprocess((val) => {
     return val;
 }, z.coerce.number().optional());
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
 // Define Zod schema for validation
 const formSchema = z.object({
   fullName: z.string().min(2, {
@@ -43,6 +46,14 @@ const formSchema = z.object({
   bio: z.string().max(500, { message: 'Bio must not exceed 500 characters.' }).optional(),
   certifications: z.string().optional(),
   location: z.string().min(2, { message: 'Location is required.' }),
+  profilePicture: z
+    .any()
+    .refine((files) => files?.length === 1, 'Profile picture is required.')
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      'Only .jpg, .jpeg, .png and .webp formats are supported.'
+    ),
   agreeTerms: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the terms and conditions.',
   }),
@@ -69,17 +80,29 @@ export default function RegisterPage() {
       certifications: '',
       location: '',
       agreeTerms: false,
+      profilePicture: undefined,
     },
   });
 
   function onSubmit(values: FormData) {
-    addGuard(values);
-    toast({
-      title: 'Registration Successful!',
-      description: 'Your profile has been created and is now live.',
-      variant: 'default',
-    });
-    router.push('/search');
+    const file = values.profilePicture[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageDataUrl = reader.result as string;
+        const { profilePicture, agreeTerms, email, phone, ...guardData } = values;
+
+        addGuard({ ...guardData, profilePictureUrl: imageDataUrl });
+
+        toast({
+          title: 'Registration Successful!',
+          description: 'Your profile has been created and is now live.',
+          variant: 'default',
+        });
+        router.push('/search');
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   return (
@@ -254,7 +277,29 @@ export default function RegisterPage() {
                 )}
               />
 
-              {/* TODO: Add fields for availability, skills, profile picture */}
+               <FormField
+                  control={form.control}
+                  name="profilePicture"
+                  render={({ field: { value, onChange, ...fieldProps } }) => (
+                    <FormItem>
+                      <FormLabel>Profile Picture</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...fieldProps}
+                          type="file"
+                          accept="image/png, image/jpeg, image/webp"
+                          onChange={(event) =>
+                            onChange(event.target.files && event.target.files[0])
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        A clear, professional headshot is recommended. Max 5MB.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
               <FormField
                 control={form.control}

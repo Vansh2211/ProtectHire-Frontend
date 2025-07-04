@@ -28,6 +28,7 @@ export interface NewGuardData {
   dailyRate?: number;
   monthlyRate?: number;
   bio?: string;
+  profilePictureUrl: string;
 }
 
 
@@ -65,11 +66,11 @@ export const GuardsProvider = ({ children }: { children: ReactNode }) => {
       rating: +(4.0 + Math.random()).toFixed(1), // Random rating between 4.0 and 5.0
       experience: guardData.experienceYears,
       skills: guardData.certifications ? guardData.certifications.split(',').map(s => s.trim().toLowerCase().replace(/\s+/g, '_')) : [],
-      image: `https://placehold.co/300x200.png`,
+      image: guardData.profilePictureUrl,
       dataAiHint: "person security",
       bio: guardData.bio,
     };
-    setGuards(prevGuards => [...prevGuards, newGuard]);
+    setGuards(prevGuards => [newGuard, ...prevGuards]);
   };
 
   return (
