@@ -21,7 +21,6 @@ export type ChatOutput = z.infer<typeof ChatOutputSchema>;
 const chatPrompt = ai.definePrompt({
     name: 'chatPrompt',
     input: { schema: ChatInputSchema },
-    output: { schema: ChatOutputSchema },
     prompt: `You are a friendly and helpful assistant for GetSecure, a platform that connects security guards with clients. Your goal is to answer questions about the platform, guide users, and provide helpful suggestions. Be concise and professional.
 
 User question: {{{message}}}
@@ -35,8 +34,8 @@ const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input) => {
-    const { output } = await chatPrompt(input);
-    return output ?? "I'm sorry, I couldn't generate a response. Please try again.";
+    const response = await chatPrompt(input);
+    return response.text ?? "I'm sorry, I couldn't generate a response. Please try again.";
   }
 );
 
