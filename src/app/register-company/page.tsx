@@ -126,7 +126,7 @@ export default function RegisterCompanyPage() {
                   <FormItem>
                     <FormLabel>Headquarters / Main Office</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., San Francisco, CA" {...field} />
+                      <Input placeholder="e.g., Bangalore, KA" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

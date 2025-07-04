@@ -20,7 +20,7 @@ export interface Location {
 export async function getCurrentLocation(): Promise<Location> {
   // TODO: Implement this by calling an API.
   return {
-    lat: 34.0522,
-    lng: -118.2437,
+    lat: 19.0760,
+    lng: 72.8777,
   };
 }

@@ -16,11 +16,11 @@ import { getCurrentLocation, type Location } from '@/services/geolocation'; // A
 
 // Mock data for guards - replace with actual API fetch
 const mockGuards = [
-  { id: '1', name: 'Alice Johnson', location: 'New York, NY', rate: 30, rating: 4.8, experience: 5, skills: ['cpr', 'first_aid'], image: 'https://picsum.photos/200/200?random=1', dataAiHint: "person portrait" },
-  { id: '2', name: 'Bob Smith', location: 'Los Angeles, CA', rate: 25, rating: 4.5, experience: 3, skills: ['crowd_control'], image: 'https://picsum.photos/200/200?random=2', dataAiHint: "security guard" },
-  { id: '3', name: 'Charlie Davis', location: 'Chicago, IL', rate: 35, rating: 4.9, experience: 8, skills: ['cpr', 'first_aid', 'crowd_control'], image: 'https://picsum.photos/200/200?random=3', dataAiHint: "bouncer professional" },
-  { id: '4', name: 'Diana Miller', location: 'New York, NY', rate: 28, rating: 4.6, experience: 4, skills: ['first_aid'], image: 'https://picsum.photos/200/200?random=4', dataAiHint: "woman security" },
-  { id: '5', name: 'Ethan Wilson', location: 'Miami, FL', rate: 32, rating: 4.7, experience: 6, skills: ['crowd_control', 'vip_protection'], image: 'https://picsum.photos/200/200?random=5', dataAiHint: "man security" },
+  { id: '1', name: 'Aarav Sharma', location: 'Mumbai, MH', hourlyRate: 500, dailyRate: 3500, rating: 4.8, experience: 5, skills: ['cpr', 'first_aid'], image: 'https://picsum.photos/200/200?random=1', dataAiHint: "person portrait" },
+  { id: '2', name: 'Priya Patel', location: 'Delhi, DL', hourlyRate: 450, monthlyRate: 90000, rating: 4.5, experience: 3, skills: ['crowd_control'], image: 'https://picsum.photos/200/200?random=2', dataAiHint: "security guard" },
+  { id: '3', name: 'Vikram Singh', location: 'Bangalore, KA', dailyRate: 4000, monthlyRate: 100000, rating: 4.9, experience: 8, skills: ['cpr', 'first_aid', 'crowd_control'], image: 'https://picsum.photos/200/200?random=3', dataAiHint: "bouncer professional" },
+  { id: '4', name: 'Ananya Gupta', location: 'Mumbai, MH', hourlyRate: 550, rating: 4.6, experience: 4, skills: ['first_aid'], image: 'https://picsum.photos/200/200?random=4', dataAiHint: "woman security" },
+  { id: '5', name: 'Rohan Joshi', location: 'Pune, MH', hourlyRate: 480, dailyRate: 3800, rating: 4.7, experience: 6, skills: ['crowd_control', 'vip_protection'], image: 'https://picsum.photos/200/200?random=5', dataAiHint: "man security" },
 ];
 
 // Define types
@@ -28,7 +28,9 @@ interface Guard {
   id: string;
   name: string;
   location: string;
-  rate: number;
+  hourlyRate?: number;
+  dailyRate?: number;
+  monthlyRate?: number;
   rating: number;
   experience: number;
   skills: string[];
@@ -50,7 +52,7 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
     location: '',
-    maxRate: 50, // Default max rate
+    maxRate: 1000, // Default max hourly rate in INR
     minRating: 0,
     minExperience: 0,
     skills: [],
@@ -63,10 +65,7 @@ export default function SearchPage() {
     getCurrentLocation()
       .then(location => {
         setUserLocation(location);
-        // Optionally pre-fill location filter based on IP geolocation or browser API
-        // For now, just log it
         console.log("User location:", location);
-        // setFilters(prev => ({ ...prev, location: 'Near Me' })); // Placeholder
       })
       .catch(error => {
         console.error("Error getting location:", error);
@@ -94,8 +93,8 @@ export default function SearchPage() {
         );
       }
 
-      // Max Rate Filter
-      result = result.filter(guard => guard.rate <= filters.maxRate);
+      // Max Rate Filter (applies only to hourly rate)
+      result = result.filter(guard => guard.hourlyRate === undefined || guard.hourlyRate <= filters.maxRate);
 
       // Min Rating Filter
       result = result.filter(guard => guard.rating >= filters.minRating);
@@ -141,7 +140,7 @@ export default function SearchPage() {
            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
            <Input
             type="text"
-            placeholder="Search by location (e.g., New York, NY)"
+            placeholder="Search by location (e.g., Mumbai, MH)"
             value={filters.location}
             onChange={(e) => handleFilterChange('location', e.target.value)}
             className="pl-10 pr-4 py-2 w-full"
@@ -165,12 +164,12 @@ export default function SearchPage() {
               <CardContent className="space-y-6">
                 {/* Max Hourly Rate Filter */}
                  <div>
-                    <Label htmlFor="maxRate" className="mb-2 block">Max Hourly Rate: ${filters.maxRate}</Label>
+                    <Label htmlFor="maxRate" className="mb-2 block">Max Hourly Rate: ₹{filters.maxRate}</Label>
                     <Slider
                         id="maxRate"
-                        min={10}
-                        max={100}
-                        step={1}
+                        min={200}
+                        max={2000}
+                        step={50}
                         value={[filters.maxRate]}
                         onValueChange={(value) => handleFilterChange('maxRate', value[0])}
                         className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4" // Smaller thumb
@@ -230,7 +229,7 @@ export default function SearchPage() {
 
               </CardContent>
               <CardFooter>
-                  <Button onClick={() => setFilters({ location: '', maxRate: 50, minRating: 0, minExperience: 0, skills: [] })} variant="outline" className="w-full">
+                  <Button onClick={() => setFilters({ location: '', maxRate: 1000, minRating: 0, minExperience: 0, skills: [] })} variant="outline" className="w-full">
                     Reset Filters
                   </Button>
               </CardFooter>
@@ -280,9 +279,15 @@ export default function SearchPage() {
                     <CardDescription className="flex items-center text-sm text-muted-foreground mb-2">
                       <MapPin className="w-4 h-4 mr-1" /> {guard.location}
                     </CardDescription>
-                     <div className="text-sm text-muted-foreground mb-3">
+                     <div className="text-sm text-muted-foreground mb-3 space-y-1">
                        <p>Experience: {guard.experience} years</p>
-                       <p>Rate: ${guard.rate}/hr</p>
+                       <div>
+                         <p className="font-medium text-foreground">Rates:</p>
+                         {guard.hourlyRate && <p className="pl-2">₹{guard.hourlyRate}/hr</p>}
+                         {guard.dailyRate && <p className="pl-2">₹{guard.dailyRate}/day</p>}
+                         {guard.monthlyRate && <p className="pl-2">₹{guard.monthlyRate}/month</p>}
+                         {!guard.hourlyRate && !guard.dailyRate && !guard.monthlyRate && <p className="pl-2">Contact for rates</p>}
+                       </div>
                     </div>
                      <div className="flex flex-wrap gap-1">
                         {guard.skills.map(skill => (

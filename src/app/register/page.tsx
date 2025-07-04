@@ -21,6 +21,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { UserPlus, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
+// Preprocessing for optional number fields to handle empty strings
+const emptyStringToUndefined = z.preprocess((val) => {
+    if (typeof val === 'string' && val === '') return undefined;
+    return val;
+}, z.coerce.number().optional());
+
 // Define Zod schema for validation
 const formSchema = z.object({
   fullName: z.string().min(2, {
@@ -29,14 +35,18 @@ const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
   phone: z.string().min(10, { message: 'Phone number must be at least 10 digits.' }).regex(/^\+?[0-9\s-]+$/, {message: "Invalid phone number format."}),
   experienceYears: z.coerce.number().min(0, { message: 'Experience must be a positive number.' }),
-  hourlyRate: z.coerce.number().min(0, { message: 'Hourly rate must be a positive number.' }),
+  hourlyRate: emptyStringToUndefined,
+  dailyRate: emptyStringToUndefined,
+  monthlyRate: emptyStringToUndefined,
   bio: z.string().max(500, { message: 'Bio must not exceed 500 characters.' }).optional(),
   certifications: z.string().optional(),
   location: z.string().min(2, { message: 'Location is required.' }),
   agreeTerms: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the terms and conditions.',
   }),
-  // Add more fields as needed: availability, skills (checkboxes/multi-select), profile picture upload
+}).refine(data => data.hourlyRate != null || data.dailyRate != null || data.monthlyRate != null, {
+    message: "Please provide at least one rate (hourly, daily, or monthly).",
+    path: ["hourlyRate"], // Attach error to the first rate field for display
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -50,7 +60,6 @@ export default function RegisterPage() {
       email: '',
       phone: '',
       experienceYears: 0,
-      hourlyRate: 15, // Example default
       bio: '',
       certifications: '',
       location: '',
@@ -64,7 +73,7 @@ export default function RegisterPage() {
     toast({
       title: 'Registration Submitted!',
       description: 'Your profile is being created. We will notify you upon approval.',
-      variant: 'default', // or 'success' if you add that variant
+      variant: 'default',
     });
     // Optionally reset form or redirect
     // form.reset();
@@ -119,36 +128,7 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
-                        <Input type="tel" placeholder="+1 123-456-7890" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                 <FormField
-                  control={form.control}
-                  name="experienceYears"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Years of Experience</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" placeholder="e.g., 5" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="hourlyRate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Hourly Rate ($)</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" step="0.01" placeholder="e.g., 25.50" {...field} />
+                        <Input type="tel" placeholder="+91 98765 43210" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -158,12 +138,75 @@ export default function RegisterPage() {
 
                <FormField
                 control={form.control}
+                name="experienceYears"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Years of Experience</FormLabel>
+                    <FormControl>
+                      <Input type="number" min="0" placeholder="e.g., 5" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div>
+                <FormLabel>Rates (₹)</FormLabel>
+                <FormDescription>
+                    Provide at least one rate. All fields are optional.
+                </FormDescription>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 mt-2">
+                    <FormField
+                        control={form.control}
+                        name="hourlyRate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="font-normal text-muted-foreground">Hourly</FormLabel>
+                                <FormControl>
+                                    <Input type="number" min="0" placeholder="e.g., 500" {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="dailyRate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="font-normal text-muted-foreground">Daily</FormLabel>
+                                <FormControl>
+                                    <Input type="number" min="0" placeholder="e.g., 4000" {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="monthlyRate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="font-normal text-muted-foreground">Monthly</FormLabel>
+                                <FormControl>
+                                    <Input type="number" min="0" placeholder="e.g., 80000" {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                 <FormMessage>
+                    {form.formState.errors.hourlyRate?.message}
+                </FormMessage>
+              </div>
+
+
+               <FormField
+                control={form.control}
                 name="location"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Primary Service Area / City</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Los Angeles, CA" {...field} />
+                      <Input placeholder="e.g., Mumbai, MH" {...field} />
                     </FormControl>
                      <FormDescription>
                         The main location where you are available for work.
@@ -198,7 +241,7 @@ export default function RegisterPage() {
                   <FormItem>
                     <FormLabel>Certifications (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., CPR Certified, Security License #123" {...field} />
+                      <Input placeholder="e.g., PSARA License, CPR Certified" {...field} />
                     </FormControl>
                      <FormDescription>
                         List any relevant certifications or licenses you hold.
