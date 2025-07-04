@@ -163,7 +163,7 @@ export default function RegisterPage() {
                             <FormItem>
                                 <FormLabel className="font-normal text-muted-foreground">Hourly</FormLabel>
                                 <FormControl>
-                                    <Input type="number" min="0" placeholder="e.g., 500" {...field} />
+                                    <Input type="number" min="0" placeholder="e.g., 500" {...field} value={field.value ?? ""} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -175,7 +175,7 @@ export default function RegisterPage() {
                             <FormItem>
                                 <FormLabel className="font-normal text-muted-foreground">Daily</FormLabel>
                                 <FormControl>
-                                    <Input type="number" min="0" placeholder="e.g., 4000" {...field} />
+                                    <Input type="number" min="0" placeholder="e.g., 4000" {...field} value={field.value ?? ""} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                             <FormItem>
                                 <FormLabel className="font-normal text-muted-foreground">Monthly</FormLabel>
                                 <FormControl>
-                                    <Input type="number" min="0" placeholder="e.g., 80000" {...field} />
+                                    <Input type="number" min="0" placeholder="e.g., 80000" {...field} value={field.value ?? ""} />
                                 </FormControl>
                             </FormItem>
                         )}
