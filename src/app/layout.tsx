@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Header"; // Import Header
 import { GuardsProvider } from "@/context/GuardsContext";
-import Chatbot from "@/components/Chatbot";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -34,7 +33,6 @@ export default function RootLayout({
             {/* Optional: Add a Footer component here */}
           </div>
           <Toaster />
-          <Chatbot />
         </GuardsProvider>
       </body>
     </html>
