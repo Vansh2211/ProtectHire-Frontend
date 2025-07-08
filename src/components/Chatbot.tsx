@@ -49,17 +49,9 @@ export default function Chatbot() {
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error('Chatbot error:', error);
-      let errorText = 'Sorry, I seem to be having some trouble connecting. Please try again later.';
-      if (error instanceof Error && error.message.includes('not found')) {
-        errorText = `<b>Connection Error</b><br/>I can't connect to the AI model. This usually means there's an issue with the Google Cloud project settings for your API key.<br/><br/>Please check the following in your Google Cloud project:<br/>1. The <b>Generative Language API</b> is enabled. <a href='https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com' target='_blank' rel='noopener noreferrer' class='text-primary underline'>Click here to check/enable it.</a><br/>2. <b>Billing</b> is active on the project.<br/>3. The API key you entered in the <code>.env</code> file is correct.`;
-      } else if (error instanceof Error) {
-        console.error("Detailed error: ", error.message);
-        errorText = `An unexpected error occurred: ${error.message}`;
-      }
-      
       const errorMessage: Message = {
         role: 'bot',
-        text: errorText,
+        text: `<b>Connection Error</b><br/>I can't connect to the AI model. This usually means there's an issue with your Google Cloud project setup.<br/><br/>Please check the following:<br/>1. The <b>Generative Language API</b> is enabled. <a href='https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com' target='_blank' rel='noopener noreferrer' class='text-primary underline'>Click here to check/enable it.</a><br/>2. <b>Billing</b> is active on the project.<br/>3. The API key you provided in the <code>.env</code> file is correct and has no restrictions.`,
         isHtml: true,
       };
       setMessages((prev) => [...prev, errorMessage]);
