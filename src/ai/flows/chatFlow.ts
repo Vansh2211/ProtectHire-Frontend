@@ -21,6 +21,7 @@ export type ChatOutput = z.infer<typeof ChatOutputSchema>;
 const chatPrompt = ai.definePrompt({
     name: 'chatPrompt',
     input: { schema: ChatInputSchema },
+    model: 'googleai/gemini-1.0-pro',
     prompt: `You are a friendly and helpful assistant for GetSecure, a platform that connects security guards with clients. Your goal is to answer questions about the platform, guide users, and provide helpful suggestions. Be concise and professional.
 
 User question: {{{message}}}
