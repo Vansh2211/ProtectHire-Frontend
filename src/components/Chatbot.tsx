@@ -51,7 +51,7 @@ export default function Chatbot() {
       console.error('Chatbot error:', error);
       const errorMessage: Message = {
         role: 'bot',
-        text: `<b>Connection Error</b><br/>I can't connect to the AI model. This usually means there's an issue with your Google Cloud project setup.<br/><br/>Please check the following:<br/>1. The <b>Generative Language API</b> is enabled. <a href='https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com' target='_blank' rel='noopener noreferrer' class='text-primary underline'>Click here to check/enable it.</a><br/>2. <b>Billing</b> is active on the project.<br/>3. The API key you provided in the <code>.env</code> file is correct and has no restrictions.`,
+        text: `<b>Connection Error</b><br/>I can't connect to the AI model. This usually means there's an issue with your Google Cloud project setup.<br/><br/>Please check the following:<br/>1. The <b>Generative Language API</b> is enabled. <a href='https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com' target='_blank' rel='noopener noreferrer' class='text-primary underline'>Click here to check/enable it.</a><br/>2. <b>Billing</b> is active on the project.<br/>3. The API key you provided in the <code>.env</code> file is correct and has no restrictions. If you have restricted your API key (e.g., by HTTP referrer or IP address), the server-side requests from this app will likely be blocked. For this app to work, you may need to remove the restrictions or create a new, unrestricted key.`,
         isHtml: true,
       };
       setMessages((prev) => [...prev, errorMessage]);
