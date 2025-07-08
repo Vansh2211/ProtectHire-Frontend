@@ -48,9 +48,16 @@ export default function Chatbot() {
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error('Chatbot error:', error);
+      let errorText = 'Sorry, I seem to be having some trouble connecting to the AI. Please try again later.';
+      if (error instanceof Error && error.message.includes('not found')) {
+          errorText = "I can't connect to the AI model. This is usually due to an issue with the API key or Google Cloud project settings. Please ensure the API key is correct and that the 'Generative Language API' is enabled and billing is active on the associated project."
+      } else if (error instanceof Error) {
+        console.error("Detailed error: ", error.message);
+      }
+      
       const errorMessage: Message = {
         role: 'bot',
-        text: 'Sorry, I seem to be having some trouble. Please try again later.',
+        text: errorText,
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
