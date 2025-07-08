@@ -18,15 +18,7 @@ export type ChatInput = z.infer<typeof ChatInputSchema>;
 const ChatOutputSchema = z.string().describe("The chatbot's response.");
 export type ChatOutput = z.infer<typeof ChatOutputSchema>;
 
-const chatPrompt = ai.definePrompt({
-    name: 'chatPrompt',
-    input: { schema: ChatInputSchema },
-    model: 'googleai/gemini-1.0-pro',
-    prompt: `You are a friendly and helpful assistant for GetSecure, a platform that connects security guards with clients. Your goal is to answer questions about the platform, guide users, and provide helpful suggestions. Be concise and professional.
-
-User question: {{{message}}}
-`,
-});
+const systemPrompt = `You are a friendly and helpful assistant for GetSecure, a platform that connects security guards with clients. Your goal is to answer questions about the platform, guide users, and provide helpful suggestions. Be concise and professional.`;
 
 const chatFlow = ai.defineFlow(
   {
@@ -35,8 +27,13 @@ const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input) => {
-    const response = await chatPrompt(input);
-    return response.text ?? "I'm sorry, I couldn't generate a response. Please try again.";
+    const llmResponse = await ai.generate({
+      model: 'googleai/gemini-1.0-pro',
+      prompt: input.message,
+      system: systemPrompt,
+    });
+    
+    return llmResponse.text ?? "I'm sorry, I couldn't generate a response. Please try again.";
   }
 );
 
