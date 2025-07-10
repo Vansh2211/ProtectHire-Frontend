@@ -6,6 +6,7 @@
  * - GenerateBioInput - The input type for the generateBio function.
  */
 import { ai } from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { z } from 'zod';
 
 const GenerateBioInputSchema = z.object({
@@ -18,6 +19,7 @@ export type GenerateBioInput = z.infer<typeof GenerateBioInputSchema>;
 const generateBioPrompt = ai.definePrompt({
     name: 'generateBioPrompt',
     input: { schema: GenerateBioInputSchema },
+    model: googleAI('gemini-1.5-flash-latest'),
     prompt: `You are an expert at writing professional, concise, and compelling bios for security professionals.
     
     A security guard needs a bio for their profile on a hiring platform called "GetSecure".
