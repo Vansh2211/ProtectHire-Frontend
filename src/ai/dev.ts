@@ -1,2 +1,2 @@
-// Flows will be imported for their side effects in this file.
-import './flows/generateBioFlow';
+// This file is used to register Genkit flows for development.
+// No flows are currently registered.
