@@ -18,10 +18,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserPlus, ShieldCheck } from 'lucide-react';
+import { UserPlus, ShieldCheck, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGuards } from '@/context/GuardsContext';
+import { useState } from 'react';
+import { generateBio } from '@/ai/flows/generateBioFlow';
 
 // Preprocessing for optional number fields to handle empty strings
 const emptyStringToUndefined = z.preprocess((val) => {
@@ -68,6 +70,7 @@ export default function RegisterPage() {
   const { toast } = useToast();
   const router = useRouter();
   const { addGuard } = useGuards();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -83,6 +86,31 @@ export default function RegisterPage() {
       profilePicture: undefined,
     },
   });
+
+  async function handleGenerateBio() {
+    setIsGenerating(true);
+    const { experienceYears, certifications } = form.getValues();
+    try {
+      const generated = await generateBio({
+        experience: experienceYears,
+        skills: certifications?.split(',').map(s => s.trim()) || [],
+      });
+      form.setValue('bio', generated);
+      toast({
+        title: 'Bio Generated!',
+        description: 'The AI-generated bio has been added.',
+      });
+    } catch (error) {
+      console.error('Error generating bio:', error);
+      toast({
+        title: 'Error',
+        description: 'Could not generate bio at this time.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  }
 
   function onSubmit(values: FormData) {
     const file = values.profilePicture[0];
@@ -244,10 +272,39 @@ export default function RegisterPage() {
 
               <FormField
                 control={form.control}
+                name="certifications"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Certifications / Skills (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., PSARA License, CPR Certified, Crowd Control" {...field} />
+                    </FormControl>
+                     <FormDescription>
+                        List any relevant skills, certifications or licenses you hold. Separate with commas.
+                     </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Short Bio</FormLabel>
+                    <div className="flex justify-between items-center">
+                      <FormLabel>Short Bio</FormLabel>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleGenerateBio}
+                        disabled={isGenerating}
+                      >
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        {isGenerating ? 'Generating...' : 'Generate with AI'}
+                      </Button>
+                    </div>
                     <FormControl>
                       <Textarea
                         placeholder="Tell clients about yourself, your skills, and experience (max 500 characters)"
@@ -255,23 +312,6 @@ export default function RegisterPage() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-               <FormField
-                control={form.control}
-                name="certifications"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Certifications (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., PSARA License, CPR Certified" {...field} />
-                    </FormControl>
-                     <FormDescription>
-                        List any relevant certifications or licenses you hold. Separate with commas.
-                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
