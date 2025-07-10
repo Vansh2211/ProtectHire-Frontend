@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShieldCheck, Search, UserPlus, Building2, Handshake, ClipboardList } from "lucide-react";
+import { Search, UserPlus, Building2, Handshake, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { ProtectHireLogo } from "@/components/ProtectHireLogo";
 
 export default function Home() {
   return (
@@ -10,10 +11,11 @@ export default function Home() {
       {/* Hero Section */}
       <section className="w-full bg-gradient-to-r from-primary to-blue-800 py-20 text-primary-foreground md:py-32">
         <div className="container mx-auto flex flex-col items-center px-4 text-center">
-          <ShieldCheck className="mb-4 h-16 w-16" />
-          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+          <ProtectHireLogo className="mb-4 h-16 w-16 text-accent" />
+          <h1 className="mb-2 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
             ProtectHire
           </h1>
+          <p className="mb-4 text-xl font-medium text-blue-200">Your Safety, Our Priority</p>
           <p className="mb-8 max-w-3xl text-lg text-blue-100 md:text-xl">
             Your trusted platform for hiring professional security guards and for guards to find their next job. Fast, reliable, and secure.
           </p>
@@ -95,7 +97,7 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div className="flex items-start space-x-4">
-              <ShieldCheck className="mt-1 h-6 w-6 flex-shrink-0 text-accent" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-1 h-6 w-6 flex-shrink-0 text-accent"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
               <div>
                 <h3 className="mb-1 text-lg font-semibold">Verified Professionals</h3>
                 <p className="text-muted-foreground">

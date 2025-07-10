@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, ShieldCheck, Search, UserPlus, Building2 } from "lucide-react";
+import { Menu, Search, UserPlus, Building2 } from "lucide-react";
+import { ProtectHireLogo } from "./ProtectHireLogo";
 
 export default function Header() {
   return (
@@ -9,7 +10,7 @@ export default function Header() {
       <div className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <ShieldCheck className="h-6 w-6 text-primary" />
+            <ProtectHireLogo className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
               ProtectHire
             </span>
@@ -51,7 +52,7 @@ export default function Header() {
               href="/"
               className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
             >
-              <ShieldCheck className="h-6 w-6 text-primary" />
+              <ProtectHireLogo className="h-6 w-6 text-primary" />
               <span className="font-bold">ProtectHire</span>
             </Link>
             <div className="space-y-4 py-6">
