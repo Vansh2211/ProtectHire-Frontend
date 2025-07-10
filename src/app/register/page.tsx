@@ -114,7 +114,7 @@ export default function RegisterPage() {
            </div>
           <CardTitle className="text-3xl font-bold">Register as a Guard</CardTitle>
           <CardDescription>
-            Join GetSecure and start getting booked for security jobs. Fill out your profile below.
+            Join ProtectHire and start getting booked for security jobs. Fill out your profile below.
           </CardDescription>
         </CardHeader>
         <CardContent>

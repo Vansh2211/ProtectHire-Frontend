@@ -12,7 +12,7 @@ export default function Home() {
         <div className="container mx-auto flex flex-col items-center px-4 text-center">
           <ShieldCheck className="mb-4 h-16 w-16" />
           <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
-            GetSecure
+            ProtectHire
           </h1>
           <p className="mb-8 max-w-3xl text-lg text-blue-100 md:text-xl">
             Your trusted platform for hiring professional security guards and for guards to find their next job. Fast, reliable, and secure.
@@ -160,7 +160,7 @@ export default function Home() {
          <div className="container mx-auto flex flex-col items-center px-4 text-center">
              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Ready to get started?</h2>
              <p className="mb-8 max-w-xl text-lg text-muted-foreground">
-                Whether you need security or you are security, GetSecure connects you.
+                Whether you need security or you are security, ProtectHire connects you.
              </p>
              <div className="flex flex-col gap-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                  <Button asChild size="lg" className="bg-accent hover:bg-accent/90">

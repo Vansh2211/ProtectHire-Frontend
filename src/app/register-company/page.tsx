@@ -71,7 +71,7 @@ export default function RegisterCompanyPage() {
            </div>
           <CardTitle className="text-3xl font-bold">Register Your Company</CardTitle>
           <CardDescription>
-            Join GetSecure to find top security talent. Post jobs and connect with professionals.
+            Join ProtectHire to find top security talent. Post jobs and connect with professionals.
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -11,7 +11,7 @@ export default function Header() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <ShieldCheck className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
-              GetSecure
+              ProtectHire
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -52,7 +52,7 @@ export default function Header() {
               className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
             >
               <ShieldCheck className="h-6 w-6 text-primary" />
-              <span className="font-bold">GetSecure</span>
+              <span className="font-bold">ProtectHire</span>
             </Link>
             <div className="space-y-4 py-6">
               <Link

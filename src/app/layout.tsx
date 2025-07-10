@@ -9,7 +9,7 @@ import { GuardsProvider } from "@/context/GuardsContext";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "GetSecure",
+  title: "ProtectHire",
   description: "Hire security guards and bouncers, or find security jobs on demand.",
 };
 

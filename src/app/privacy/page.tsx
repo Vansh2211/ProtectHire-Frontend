@@ -6,10 +6,10 @@ export default function PrivacyPage() {
         <p>Last updated: [Date]</p>
 
         <p>
-          GetSecure (&quot;GetSecure,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is
+          ProtectHire (&quot;ProtectHire,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is
           committed to protecting your privacy. This Privacy Policy explains how
           we collect, use, disclose, and safeguard your information when you use
-          our GetSecure platform, including our website and mobile applications
+          our ProtectHire platform, including our website and mobile applications
           (collectively, the &quot;Service&quot;). Please read this privacy policy
           carefully. If you do not agree with the terms of this privacy policy,
           please do not access the Service.

@@ -6,10 +6,10 @@ export default function TermsPage() {
         <p>Last updated: [Date]</p>
 
         <p>
-          Welcome to GetSecure! These Terms of Service (&quot;Terms&quot;) govern your
-          use of the GetSecure platform, including our website and mobile
-          applications (collectively, the &quot;Service&quot;), provided by GetSecure
-          (&quot;GetSecure,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;).
+          Welcome to ProtectHire! These Terms of Service (&quot;Terms&quot;) govern your
+          use of the ProtectHire platform, including our website and mobile
+          applications (collectively, the &quot;Service&quot;), provided by ProtectHire
+          (&quot;ProtectHire,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;).
         </p>
 
         <p>
@@ -20,12 +20,12 @@ export default function TermsPage() {
 
         <h2>1. Service Description</h2>
         <p>
-          GetSecure is a platform that connects individuals and businesses
+          ProtectHire is a platform that connects individuals and businesses
           (&quot;Clients&quot;) seeking security services with independent security
           professionals, including guards and bouncers (&quot;Guards&quot;). We
           provide tools for Guards to create profiles, Clients to search for
           Guards, and facilitate communication and booking arrangements.
-          GetSecure is a neutral venue and does not employ Guards directly, nor
+          ProtectHire is a neutral venue and does not employ Guards directly, nor
           does it guarantee the quality, safety, or legality of the services
           provided by Guards or the requests made by Clients.
         </p>
@@ -65,7 +65,7 @@ export default function TermsPage() {
         <h2>5. Disclaimers</h2>
         <p>
           The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis.
-          GetSecure makes no representations or warranties of any kind, express
+          ProtectHire makes no representations or warranties of any kind, express
           or implied, as to the operation of the Service or the information,
           content, or materials included therein. We do not screen or vet users
           beyond the information provided during registration and do not guarantee
@@ -76,7 +76,7 @@ export default function TermsPage() {
 
         <h2>6. Limitation of Liability</h2>
         <p>
-          In no event shall GetSecure, nor its directors, employees, partners,
+          In no event shall ProtectHire, nor its directors, employees, partners,
           agents, suppliers, or affiliates, be liable for any indirect,
           incidental, special, consequential, or punitive damages, including
           without limitation, loss of profits, data, use, goodwill, or other
@@ -91,7 +91,7 @@ export default function TermsPage() {
 
          <h2>7. Indemnification</h2>
         <p>
-         You agree to defend, indemnify and hold harmless GetSecure and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees), resulting from or arising out of a) your use and access of the Service, by you or any person using your account and password, or b) a breach of these Terms.
+         You agree to defend, indemnify and hold harmless ProtectHire and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not to attorney's fees), resulting from or arising out of a) your use and access of the Service, by you or any person using your account and password, or b) a breach of these Terms.
         </p>
 
 
