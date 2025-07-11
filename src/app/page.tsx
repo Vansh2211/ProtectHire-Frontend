@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, UserPlus, Building2, Handshake, ClipboardList } from "lucide-react";
+import { Search, UserPlus, Building2, Handshake, ClipboardList, ShieldQuestion, Briefcase } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { ProtectHireLogo } from "@/components/ProtectHireLogo";
@@ -149,8 +149,51 @@ export default function Home() {
         </div>
       </section>
 
-        {/* Call to Action Section */}
+      {/* Why ProtectHire Section */}
       <section className="w-full py-16 md:py-24">
+        <div className="container mx-auto px-4">
+           <h2 className="mb-12 text-center text-3xl font-bold tracking-tight md:text-4xl">
+            Why ProtectHire is Essential
+          </h2>
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
+            <div className="rounded-lg border bg-card p-8 text-card-foreground shadow-sm">
+                <div className="mb-4 flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                        <ShieldQuestion className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold">For Clients</h3>
+                </div>
+                <p className="mb-4 text-muted-foreground">
+                    Finding reliable security shouldn't be a gamble. We connect you with vetted, experienced professionals, giving you peace of mind for your events, property, or business.
+                </p>
+                <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start"><span className="mr-2 mt-1 h-2 w-2 rounded-full bg-primary"></span>Access to a wide pool of talent.</li>
+                    <li className="flex items-start"><span className="mr-2 mt-1 h-2 w-2 rounded-full bg-primary"></span>Transparent profiles with ratings and experience.</li>
+                    <li className="flex items-start"><span className="mr-2 mt-1 h-2 w-2 rounded-full bg-primary"></span>Simplified booking and communication.</li>
+                </ul>
+            </div>
+             <div className="rounded-lg border bg-card p-8 text-card-foreground shadow-sm">
+                <div className="mb-4 flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                        <Briefcase className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold">For Guards & Companies</h3>
+                </div>
+                <p className="mb-4 text-muted-foreground">
+                    Showcase your skills and find your next opportunity. We provide the platform to connect with top-tier clients and companies looking for your expertise.
+                </p>
+                 <ul className="space-y-2 text-muted-foreground">
+                    <li className="flex items-start"><span className="mr-2 mt-1 h-2 w-2 rounded-full bg-primary"></span>Create a professional portfolio.</li>
+                    <li className="flex items-start"><span className="mr-2 mt-1 h-2 w-2 rounded-full bg-primary"></span>Apply for jobs that match your skills.</li>
+                    <li className="flex items-start"><span className="mr-2 mt-1 h-2 w-2 rounded-full bg-primary"></span>Grow your career and reputation.</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        {/* Call to Action Section */}
+      <section className="w-full bg-secondary py-16 md:py-24">
          <div className="container mx-auto flex flex-col items-center px-4 text-center">
              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Ready to get started?</h2>
              <p className="mb-8 max-w-xl text-lg text-muted-foreground">
