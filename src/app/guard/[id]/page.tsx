@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -9,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { ArrowLeft, MapPin, Star, Briefcase, DollarSign, Calendar, MessageSquare } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 
 export default function GuardProfilePage() {
   const params = useParams();
@@ -112,8 +114,10 @@ export default function GuardProfilePage() {
                          </div>
                         <Separator />
                          <div className="pt-2 space-y-2">
-                            <Button size="lg" className="w-full bg-accent hover:bg-accent/90">
-                                <Calendar className="mr-2 h-5 w-5" /> Book Now
+                            <Button size="lg" className="w-full bg-accent hover:bg-accent/90" asChild>
+                                <Link href={`/book/${guard.id}`}>
+                                    <Calendar className="mr-2 h-5 w-5" /> Book Now
+                                </Link>
                             </Button>
                              <Button size="lg" className="w-full" variant="outline">
                                 <MessageSquare className="mr-2 h-5 w-5" /> Message
@@ -126,3 +130,5 @@ export default function GuardProfilePage() {
     </div>
   );
 }
+
+    
