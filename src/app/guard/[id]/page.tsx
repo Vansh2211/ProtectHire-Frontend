@@ -116,7 +116,7 @@ export default function GuardProfilePage() {
                          <div className="pt-2 space-y-2">
                             <Button size="lg" className="w-full bg-accent hover:bg-accent/90" asChild>
                                 <Link href={`/book/${guard.id}`}>
-                                    <Calendar className="mr-2 h-5 w-5" /> Book Now
+                                    <Calendar className="mr-2 h-5 w-5" /> Request to Book
                                 </Link>
                             </Button>
                              <Button size="lg" className="w-full" variant="outline">

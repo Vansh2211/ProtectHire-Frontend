@@ -23,7 +23,8 @@ import {
   MapPin,
   Clock,
   CreditCard,
-  AlertCircle
+  AlertCircle,
+  Send
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -41,13 +42,6 @@ export default function BookingPage() {
   const [endTime, setEndTime] = useState('17:00');
   const [address, setAddress] = useState('');
   const [instructions, setInstructions] = useState('');
-
-  const [paymentDetails, setPaymentDetails] = useState({
-      cardNumber: '',
-      expiry: '',
-      cvc: '',
-      name: ''
-  });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -101,7 +95,7 @@ export default function BookingPage() {
     );
   }
   
-  const handlePaymentSubmit = (e: React.FormEvent) => {
+  const handleRequestSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       if(!dateRange?.from || !address) {
           toast({
@@ -113,12 +107,12 @@ export default function BookingPage() {
       }
 
       setIsSubmitting(true);
-      // Simulate API call
+      // Simulate API call to send request
       setTimeout(() => {
         setIsSubmitting(false);
         toast({
-            title: "Booking Confirmed!",
-            description: `Your booking for ${guard.name} is confirmed. A confirmation email has been sent.`
+            title: "Booking Request Sent!",
+            description: `Your request has been sent to ${guard.name}. You will be notified upon their approval.`
         });
         router.push('/search'); // Redirect to search or a confirmation page
       }, 2000);
@@ -131,16 +125,16 @@ export default function BookingPage() {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Profile
         </Button>
-        <h1 className="text-3xl font-bold mb-6">Book Security Service</h1>
+        <h1 className="text-3xl font-bold mb-6">Request to Book Security Service</h1>
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Booking Form */}
           <div className="lg:col-span-2">
             <Card className="shadow-lg">
                 <CardHeader>
                     <CardTitle>Booking Details</CardTitle>
-                    <CardDescription>Fill in the details for your security needs.</CardDescription>
+                    <CardDescription>Fill in the details to send a booking request to the guard.</CardDescription>
                 </CardHeader>
-                <form onSubmit={handlePaymentSubmit}>
+                <form onSubmit={handleRequestSubmit}>
                     <CardContent className="space-y-6">
                         {/* Date and Time */}
                         <div className="space-y-2">
@@ -196,40 +190,14 @@ export default function BookingPage() {
                         {/* Instructions */}
                          <div className="space-y-2">
                            <Label htmlFor="instructions">Special Instructions (Optional)</Label>
-                           <Textarea id="instructions" placeholder="e.g., 'Guard should monitor the main entrance.'" value={instructions} onChange={e => setInstructions(e.target.value)}/>
+                           <Textarea id="instructions" placeholder="e.g., 'Guard should monitor the main entrance.' Add a message for the guard here." value={instructions} onChange={e => setInstructions(e.target.value)}/>
                         </div>
                         
-                        <Separator />
-                        
-                        {/* Payment Section */}
-                        <div>
-                            <h3 className="text-lg font-semibold mb-4 flex items-center"><CreditCard className="mr-2 h-5 w-5 text-primary"/> Payment Information</h3>
-                             <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="name-on-card">Name on Card</Label>
-                                    <Input id="name-on-card" placeholder="John Doe" value={paymentDetails.name} onChange={e => setPaymentDetails({...paymentDetails, name: e.target.value})} required/>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="card-number">Card Number</Label>
-                                    <Input id="card-number" placeholder="•••• •••• •••• ••••" value={paymentDetails.cardNumber} onChange={e => setPaymentDetails({...paymentDetails, cardNumber: e.target.value})} required/>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="expiry">Expiry</Label>
-                                        <Input id="expiry" placeholder="MM/YY" value={paymentDetails.expiry} onChange={e => setPaymentDetails({...paymentDetails, expiry: e.target.value})} required/>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="cvc">CVC</Label>
-                                        <Input id="cvc" placeholder="•••" value={paymentDetails.cvc} onChange={e => setPaymentDetails({...paymentDetails, cvc: e.target.value})} required/>
-                                    </div>
-                                </div>
-                             </div>
-                        </div>
-
                     </CardContent>
                     <CardFooter>
                         <Button type="submit" size="lg" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting}>
-                            {isSubmitting ? 'Processing...' : `Pay & Confirm Booking - ₹${bookingCost.toLocaleString()}`}
+                            {isSubmitting ? 'Sending Request...' : 'Send Booking Request'}
+                            <Send className="ml-2 h-4 w-4"/>
                         </Button>
                     </CardFooter>
                 </form>
@@ -250,7 +218,7 @@ export default function BookingPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <Separator/>
-                    <h4 className="font-semibold">Booking Summary</h4>
+                    <h4 className="font-semibold">Estimated Cost</h4>
                     <div className="space-y-2 text-sm text-muted-foreground">
                         <div className="flex justify-between">
                             <span>Guard Rate</span>
@@ -271,16 +239,16 @@ export default function BookingPage() {
                     </div>
                     <Separator/>
                      <div className="flex justify-between items-center text-lg">
-                        <span className="font-semibold">Total Cost</span>
+                        <span className="font-semibold">Estimated Total</span>
                         <span className="font-bold text-primary">₹{bookingCost.toLocaleString()}</span>
                     </div>
                 </CardContent>
             </Card>
             <Alert>
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Please Note</AlertTitle>
+              <AlertTitle>This is a Booking Request</AlertTitle>
               <AlertDescription>
-                This is a simulated booking. No actual payment will be processed.
+                The guard must approve your request before the booking is confirmed. Payment will be processed after confirmation.
               </AlertDescription>
             </Alert>
           </div>
@@ -289,5 +257,3 @@ export default function BookingPage() {
     </div>
   );
 }
-
-    
