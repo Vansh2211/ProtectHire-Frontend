@@ -17,7 +17,7 @@ export default function Home() {
           </h1>
           <p className="mb-4 text-xl font-medium text-blue-200">Your Safety, Our Priority</p>
           <p className="mb-8 max-w-3xl text-lg text-blue-100 md:text-xl">
-            Your trusted platform for hiring professional security guards and for guards to find their next job. Fast, reliable, and secure.
+            Your trusted platform for hiring professional security guards and for guards to find their next job.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button asChild size="lg" variant="secondary" className="bg-accent hover:bg-accent/90 text-accent-foreground">
@@ -46,7 +46,7 @@ export default function Home() {
             How It Works
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <Card className="text-center shadow-md">
+            <Card className="text-center shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               <CardHeader>
                 <div className="mb-4 flex justify-center">
                   <ClipboardList className="h-12 w-12 text-primary" />
@@ -59,7 +59,7 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center shadow-md">
+            <Card className="text-center shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               <CardHeader>
                 <div className="mb-4 flex justify-center">
                   <Search className="h-12 w-12 text-primary" />
@@ -72,7 +72,7 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="text-center shadow-md">
+            <Card className="text-center shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-xl">
               <CardHeader>
                 <div className="mb-4 flex justify-center">
                    <Handshake className="text-primary h-12 w-12"/>
