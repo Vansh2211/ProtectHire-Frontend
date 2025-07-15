@@ -53,12 +53,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+  
+  useEffect(() => {
+    // If user state changes to a logged-in user, redirect to account page
+    // This handles the redirect after the state is confirmed.
+    if (user) {
+        // Only redirect if we are on a public page like login or register
+        const currentPath = window.location.pathname;
+        if (['/login', '/register'].includes(currentPath)) {
+            router.push('/account');
+        }
+    }
+  }, [user, router]);
+
 
   const login = (userType: 'client' | 'guard') => {
     const userToLogin = userType === 'client' ? mockClient : mockGuard;
     localStorage.setItem('protecthire_user', JSON.stringify(userToLogin));
     setUser(userToLogin);
-    router.push('/account');
+    // The useEffect hook above will handle the redirect.
   };
 
   const logout = () => {
@@ -77,7 +90,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     localStorage.setItem('protecthire_user', JSON.stringify(newClient));
     setUser(newClient);
-    router.push('/account');
+    // The useEffect hook will handle the redirect.
   }
 
   return (
