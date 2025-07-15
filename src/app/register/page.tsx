@@ -19,12 +19,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserPlus, ShieldCheck, Sparkles } from 'lucide-react';
+import { UserPlus, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGuards } from '@/context/GuardsContext';
-import { generateBio } from '@/ai/flows/generateBioFlow';
-import { useState } from 'react';
 
 // Preprocessing for optional number fields to handle empty strings
 const emptyStringToUndefined = z.preprocess((val) => {
@@ -71,7 +69,6 @@ export default function RegisterPage() {
   const { toast } = useToast();
   const router = useRouter();
   const { addGuard } = useGuards();
-  const [isGeneratingBio, setIsGeneratingBio] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -87,40 +84,6 @@ export default function RegisterPage() {
       profilePicture: undefined,
     },
   });
-
-  const handleGenerateBio = async () => {
-    const { experienceYears, certifications } = form.getValues();
-    if (experienceYears === undefined || !certifications) {
-      toast({
-        title: "Please fill out experience and skills",
-        description: "We need your years of experience and skills to generate a bio.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setIsGeneratingBio(true);
-    try {
-      const bioText = await generateBio({
-        experience: experienceYears,
-        skills: certifications.split(',').map(s => s.trim())
-      });
-      form.setValue('bio', bioText);
-      toast({
-        title: "Bio Generated!",
-        description: "Your new AI-powered bio has been added.",
-      });
-    } catch (error) {
-      console.error("Error generating bio:", error);
-      toast({
-        title: "Error",
-        description: "Could not generate a bio at this time. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGeneratingBio(false);
-    }
-  };
 
   function onSubmit(values: FormData) {
     const file = values.profilePicture[0];
@@ -302,13 +265,7 @@ export default function RegisterPage() {
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex justify-between items-center">
-                        <FormLabel>Short Bio</FormLabel>
-                        <Button type="button" variant="outline" size="sm" onClick={handleGenerateBio} disabled={isGeneratingBio}>
-                           <Sparkles className="mr-2 h-4 w-4" />
-                           {isGeneratingBio ? "Generating..." : "Generate with AI"}
-                        </Button>
-                    </div>
+                    <FormLabel>Short Bio</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Tell clients about yourself, your skills, and experience (max 500 characters)"
