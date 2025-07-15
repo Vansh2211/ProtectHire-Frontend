@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useToast } from '@/hooks/use-toast';
 import { format } from "date-fns"
 import type { DateRange } from "react-day-picker"
+import { useAuth } from '@/context/AuthContext';
 import {
   ArrowLeft,
   Calendar as CalendarIcon,
@@ -34,6 +35,13 @@ export default function BookingPage() {
   const { toast } = useToast();
   const { guards } = useGuards();
   const guardId = params.id as string;
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   const guard = guards.find(g => g.id === guardId);
 
@@ -81,6 +89,10 @@ export default function BookingPage() {
 
   }, [dateRange, startTime, endTime, guard]);
 
+  if (!user) {
+    // Render nothing or a loading spinner while redirecting
+    return null;
+  }
 
   if (!guard) {
     return (

@@ -95,6 +95,18 @@ export default function Header() {
                 For Companies
               </Link>
             </div>
+             {!user && (
+                <div className="absolute bottom-0 left-0 w-full p-4 border-t">
+                  <div className="flex gap-2">
+                     <Button asChild variant="ghost" className="w-full">
+                        <Link href="/login">Log In</Link>
+                    </Button>
+                    <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                        <Link href="/register-client">Sign Up</Link>
+                    </Button>
+                  </div>
+                </div>
+            )}
           </SheetContent>
         </Sheet>
         
