@@ -68,81 +68,79 @@ export default function Header() {
         </div>
         
         {/* Mobile Menu */}
-        <div className="flex-1 md:hidden">
-            <Sheet>
-            <SheetTrigger asChild>
-                <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="Toggle Menu"
-                >
-                <Menu className="h-5 w-5" />
-                </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="pr-0">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-label="Toggle Menu"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="pr-0">
+            <Link
+              href="/"
+              className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
+            >
+              <ProtectHireLogo className="h-6 w-6 text-primary" />
+              <span className="font-bold">ProtectHire</span>
+            </Link>
+            <div className="space-y-4 py-6">
+              {userType !== 'guard' && (
                 <Link
-                href="/"
-                className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
+                  href="/search"
+                  className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
                 >
-                <ProtectHireLogo className="h-6 w-6 text-primary" />
-                <span className="font-bold">ProtectHire</span>
+                  <Search className="mr-2 h-4 w-4" />
+                  Find Guards
                 </Link>
-                <div className="space-y-4 py-6">
-                {userType !== 'guard' && (
-                    <Link
-                        href="/search"
-                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-                    >
-                        <Search className="mr-2 h-4 w-4" />
-                        Find Guards
-                    </Link>
-                )}
-                 {userType !== 'guard' && userType !== 'company' && (
-                    <Link
-                        href="/register-guard"
-                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-                    >
-                        <UserPlus className="mr-2 h-4 w-4" />
-                        Guard Registration
-                    </Link>
-                )}
-                {userType !== 'company' && (
-                    <Link
-                        href="/register-company"
-                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-                    >
-                        <Building2 className="mr-2 h-4 w-4" />
-                        For Companies
-                    </Link>
-                )}
-                {userType === 'guard' && (
-                    <Link
-                        href="/job-board"
-                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-                    >
-                        <Briefcase className="mr-2 h-4 w-4" />
-                        Job Board
-                    </Link>
-                )}
+              )}
+              {userType !== 'guard' && userType !== 'company' && (
+                <Link
+                  href="/register-guard"
+                  className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                >
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Guard Registration
+                </Link>
+              )}
+              {userType !== 'company' && (
+                <Link
+                  href="/register-company"
+                  className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                >
+                  <Building2 className="mr-2 h-4 w-4" />
+                  For Companies
+                </Link>
+              )}
+              {userType === 'guard' && (
+                <Link
+                  href="/job-board"
+                  className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                >
+                  <Briefcase className="mr-2 h-4 w-4" />
+                  Job Board
+                </Link>
+              )}
+            </div>
+            {!user && (
+              <div className="absolute bottom-0 left-0 w-full p-4 border-t">
+                <div className="flex gap-2">
+                  <Button asChild variant="ghost" className="w-full">
+                    <Link href="/login">Log In</Link>
+                  </Button>
+                  <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                    <Link href="/register">Sign Up</Link>
+                  </Button>
                 </div>
-                {!user && (
-                    <div className="absolute bottom-0 left-0 w-full p-4 border-t">
-                    <div className="flex gap-2">
-                        <Button asChild variant="ghost" className="w-full">
-                            <Link href="/login">Log In</Link>
-                        </Button>
-                        <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                            <Link href="/register">Sign Up</Link>
-                        </Button>
-                    </div>
-                    </div>
-                )}
-            </SheetContent>
-            </Sheet>
-        </div>
+              </div>
+            )}
+          </SheetContent>
+        </Sheet>
         
-        <div className="flex items-center justify-end space-x-2">
+        <div className="flex flex-1 items-center justify-end space-x-2">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

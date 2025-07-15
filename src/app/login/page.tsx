@@ -54,7 +54,7 @@ export default function LoginPage() {
   function onSubmit(values: FormData) {
     const success = login(values.email, values.password);
     if(success) {
-      router.push('/account');
+      router.push('/');
     } else {
       toast({
         title: "Login Failed",
@@ -67,7 +67,7 @@ export default function LoginPage() {
   function handleGoogleSignIn() {
     const success = login('client123@example.com', 'password'); // Simulate google login for mock client
     if (success) {
-      router.push('/account');
+      router.push('/');
     }
   }
 
