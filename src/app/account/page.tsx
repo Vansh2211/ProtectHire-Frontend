@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Shield, Briefcase, Mail, LogOut, Edit, Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AccountPage() {
   const { user, logout, isLoading } = useAuth();
@@ -68,9 +69,11 @@ export default function AccountPage() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4">
-             <Button variant="outline" className="w-full">
-                <Edit className="mr-2 h-4 w-4"/>
-                Edit Profile
+             <Button variant="outline" className="w-full" asChild>
+                <Link href="/settings">
+                    <Edit className="mr-2 h-4 w-4"/>
+                    Edit Profile
+                </Link>
              </Button>
              <Button onClick={logout} variant="destructive" className="w-full">
                <LogOut className="mr-2 h-4 w-4"/>
