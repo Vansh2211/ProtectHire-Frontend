@@ -60,7 +60,7 @@ export default function RegisterClientPage() {
            <div className="mb-4 flex justify-center">
               <UserPlus className="h-12 w-12 text-primary" />
            </div>
-          <CardTitle className="text-3xl font-bold">Create an Account</CardTitle>
+          <CardTitle className="text-3xl font-bold">Create a Client Account</CardTitle>
           <CardDescription>
             Sign up to start finding and booking security professionals.
           </CardDescription>

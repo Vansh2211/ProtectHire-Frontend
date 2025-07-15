@@ -27,12 +27,7 @@ export default function Home() {
             </Button>
             <Button asChild size="lg" variant="outline" className="border-accent text-accent bg-transparent hover:bg-accent hover:text-accent-foreground">
                <Link href="/register">
-                <UserPlus className="mr-2 h-5 w-5" /> Register as Guard
-              </Link>
-            </Button>
-             <Button asChild size="lg" variant="outline" className="border-accent text-accent bg-transparent hover:bg-accent hover:text-accent-foreground">
-               <Link href="/register-company">
-                <Building2 className="mr-2 h-5 w-5" /> Post a Job
+                <UserPlus className="mr-2 h-5 w-5" /> Join the Platform
               </Link>
             </Button>
           </div>
@@ -207,12 +202,7 @@ export default function Home() {
                  </Button>
                  <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                       <Link href="/register">
-                         <UserPlus className="mr-2 h-5 w-5" /> Join as a Guard
-                     </Link>
-                 </Button>
-                  <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                      <Link href="/register-company">
-                         <Building2 className="mr-2 h-5 w-5" /> Post a Job
+                         <UserPlus className="mr-2 h-5 w-5" /> Join the Platform
                      </Link>
                  </Button>
              </div>

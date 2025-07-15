@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, UserPlus, Building2, LogIn, UserCircle, Settings, LogOut } from "lucide-react";
+import { Menu, Search, UserPlus, Building2, LogIn, UserCircle, Settings, LogOut, Briefcase } from "lucide-react";
 import { ProtectHireLogo } from "./ProtectHireLogo";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -19,96 +19,128 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const userType = user?.userType;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
-        <div className="flex-1 md:flex md:items-center md:gap-12">
+        <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <ProtectHireLogo className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
               ProtectHire
             </span>
           </Link>
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <Link
-              href="/search"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Find Guards
-            </Link>
-            <Link
-              href="/register"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Guard Registration
-            </Link>
-             <Link
-              href="/register-company"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              For Companies
-            </Link>
+          <nav className="flex items-center space-x-6 text-sm font-medium">
+             {userType !== 'guard' && (
+                <Link
+                href="/search"
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                >
+                Find Guards
+                </Link>
+             )}
+            {userType !== 'guard' && userType !== 'company' && (
+                 <Link
+                    href="/register-guard"
+                    className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    >
+                    Guard Registration
+                </Link>
+            )}
+             {userType !== 'company' && (
+                <Link
+                href="/register-company"
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                >
+                For Companies
+                </Link>
+             )}
+              {userType === 'guard' && (
+                 <Link
+                    href="/job-board"
+                    className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    >
+                    Job Board
+                </Link>
+              )}
           </nav>
         </div>
         
         {/* Mobile Menu */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              aria-label="Toggle Menu"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="pr-0">
-            <Link
-              href="/"
-              className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
-            >
-              <ProtectHireLogo className="h-6 w-6 text-primary" />
-              <span className="font-bold">ProtectHire</span>
-            </Link>
-            <div className="space-y-4 py-6">
-              <Link
-                href="/search"
-                className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-              >
-                <Search className="mr-2 h-4 w-4" />
-                Find Guards
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-              >
-                <UserPlus className="mr-2 h-4 w-4" />
-                Guard Registration
-              </Link>
-              <Link
-                href="/register-company"
-                className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
-              >
-                <Building2 className="mr-2 h-4 w-4" />
-                For Companies
-              </Link>
-            </div>
-             {!user && (
-                <div className="absolute bottom-0 left-0 w-full p-4 border-t">
-                  <div className="flex gap-2">
-                     <Button asChild variant="ghost" className="w-full">
-                        <Link href="/login">Log In</Link>
-                    </Button>
-                    <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/register-client">Sign Up</Link>
-                    </Button>
-                  </div>
+        <div className="flex-1 md:hidden">
+            <Sheet>
+            <SheetTrigger asChild>
+                <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                aria-label="Toggle Menu"
+                >
+                <Menu className="h-5 w-5" />
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="pr-0">
+                <Link
+                href="/"
+                className="flex items-center space-x-2 px-6 pb-6 pt-4 border-b"
+                >
+                <ProtectHireLogo className="h-6 w-6 text-primary" />
+                <span className="font-bold">ProtectHire</span>
+                </Link>
+                <div className="space-y-4 py-6">
+                {userType !== 'guard' && (
+                    <Link
+                        href="/search"
+                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                    >
+                        <Search className="mr-2 h-4 w-4" />
+                        Find Guards
+                    </Link>
+                )}
+                 {userType !== 'guard' && userType !== 'company' && (
+                    <Link
+                        href="/register-guard"
+                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                    >
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        Guard Registration
+                    </Link>
+                )}
+                {userType !== 'company' && (
+                    <Link
+                        href="/register-company"
+                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                    >
+                        <Building2 className="mr-2 h-4 w-4" />
+                        For Companies
+                    </Link>
+                )}
+                {userType === 'guard' && (
+                    <Link
+                        href="/job-board"
+                        className="flex items-center px-6 py-2 text-foreground/80 hover:text-foreground"
+                    >
+                        <Briefcase className="mr-2 h-4 w-4" />
+                        Job Board
+                    </Link>
+                )}
                 </div>
-            )}
-          </SheetContent>
-        </Sheet>
+                {!user && (
+                    <div className="absolute bottom-0 left-0 w-full p-4 border-t">
+                    <div className="flex gap-2">
+                        <Button asChild variant="ghost" className="w-full">
+                            <Link href="/login">Log In</Link>
+                        </Button>
+                        <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                            <Link href="/register">Sign Up</Link>
+                        </Button>
+                    </div>
+                    </div>
+                )}
+            </SheetContent>
+            </Sheet>
+        </div>
         
         <div className="flex items-center justify-end space-x-2">
             {user ? (
@@ -154,7 +186,7 @@ export default function Header() {
                         <Link href="/login">Log In</Link>
                     </Button>
                     <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                        <Link href="/register-client">Sign Up</Link>
+                        <Link href="/register">Sign Up</Link>
                     </Button>
                 </div>
             )}

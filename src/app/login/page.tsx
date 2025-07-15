@@ -33,9 +33,6 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
-  userType: z.enum(['client', 'guard'], {
-    required_error: 'You need to select a login type.',
-  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -48,13 +45,15 @@ export default function LoginPage() {
     defaultValues: {
       email: '',
       password: '',
-      userType: 'client',
     },
   });
 
   function onSubmit(values: FormData) {
-    console.log('Simulating login for:', values);
-    login(values.userType);
+    // In a real app, you would check the user's credentials against a database.
+    // The database would return the user type.
+    // Here, we'll simulate it by logging in as a client for simplicity.
+    console.log('Simulating login for:', values.email);
+    login('client'); 
   }
 
   function handleGoogleSignIn() {
@@ -107,38 +106,6 @@ export default function LoginPage() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="userType"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Login as a...</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex space-x-4"
-                      >
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="client" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Client</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-2 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="guard" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Guard</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-
               <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
                 <LogIn className="mr-2 h-5 w-5" />
                 Log In
@@ -165,7 +132,7 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="/register-client" className="font-medium text-primary hover:underline">
+            <Link href="/register" className="font-medium text-primary hover:underline">
               Sign up
             </Link>
           </div>
