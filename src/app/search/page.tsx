@@ -17,6 +17,7 @@ import { getCurrentLocation, type Location } from '@/services/geolocation';
 import { useGuards, type Guard } from '@/context/GuardsContext';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { ProtectHireLogo } from '@/components/ProtectHireLogo';
 
 
 // Define types
@@ -272,15 +273,10 @@ export default function SearchPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredGuards.map(guard => (
                 <Card key={guard.id} className="overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 flex flex-col">
-                  <CardHeader className="p-0 relative h-48">
-                    <Image
-                      src={guard.image}
-                      alt={`Profile of ${guard.name}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      data-ai-hint={guard.dataAiHint}
-                    />
+                  <CardHeader className="p-0 relative h-48 bg-muted">
+                    <div className="flex h-full items-center justify-center">
+                        <ProtectHireLogo className="h-24 w-24 text-muted-foreground" />
+                    </div>
                      <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs flex items-center">
                        <Star className="w-3 h-3 mr-1 fill-yellow-400 text-yellow-400" />
                        {guard.rating.toFixed(1)}

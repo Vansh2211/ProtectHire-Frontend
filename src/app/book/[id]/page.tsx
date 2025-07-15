@@ -29,6 +29,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import Image from 'next/image';
+import { ProtectHireLogo } from '@/components/ProtectHireLogo';
 
 export default function BookingPage() {
   const params = useParams();
@@ -225,8 +226,8 @@ export default function BookingPage() {
           <div className="space-y-6 lg:sticky lg:top-24 h-fit">
             <Card className="shadow-md">
                 <CardHeader className="flex flex-row items-center gap-4">
-                   <div className="relative h-16 w-16 rounded-full overflow-hidden">
-                       <Image src={guard.image} alt={guard.name} fill className="object-cover" data-ai-hint={guard.dataAiHint} />
+                   <div className="relative h-16 w-16 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                       <ProtectHireLogo className="h-10 w-10 text-muted-foreground" />
                    </div>
                     <div>
                         <CardTitle className="text-xl">{guard.name}</CardTitle>
