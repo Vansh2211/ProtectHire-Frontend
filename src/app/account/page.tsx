@@ -7,22 +7,26 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Shield, Briefcase, Mail, LogOut, Edit } from 'lucide-react';
+import { User, Shield, Briefcase, Mail, LogOut, Edit, Loader2 } from 'lucide-react';
 
 export default function AccountPage() {
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const router = useRouter();
 
   React.useEffect(() => {
-    // If no user, redirect to login page. This is a simple guard.
-    if (!user) {
+    // If loading is finished and there's still no user, redirect to login.
+    if (!isLoading && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isLoading, router]);
 
-  if (!user) {
-    // Render nothing or a loading spinner while redirecting
-    return null;
+  if (isLoading || !user) {
+    // Render a loading state or nothing while checking auth
+    return (
+        <div className="flex justify-center items-center h-screen">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    );
   }
   
   const getRoleInfo = () => {

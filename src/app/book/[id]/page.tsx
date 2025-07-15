@@ -25,7 +25,8 @@ import {
   Clock,
   CreditCard,
   AlertCircle,
-  Send
+  Send,
+  Loader2,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -35,13 +36,13 @@ export default function BookingPage() {
   const { toast } = useToast();
   const { guards } = useGuards();
   const guardId = params.id as string;
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isLoading, router]);
 
   const guard = guards.find(g => g.id === guardId);
 
@@ -89,9 +90,13 @@ export default function BookingPage() {
 
   }, [dateRange, startTime, endTime, guard]);
 
-  if (!user) {
-    // Render nothing or a loading spinner while redirecting
-    return null;
+  if (isLoading || !user) {
+    // Render a loading state or nothing while checking auth
+    return (
+        <div className="flex justify-center items-center h-screen">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    );
   }
 
   if (!guard) {

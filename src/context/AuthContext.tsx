@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 // This is our in-memory "user database". In a real app, this would be a database.
 const USER_DB_KEY = 'protecthire_users';
+const CURRENT_USER_KEY = 'protecthire_user';
 
 // Define the User type
 interface User {
@@ -20,6 +21,7 @@ interface User {
 // Define the context shape
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
   login: (email: string, password: string) => boolean;
   logout: () => void;
   registerClient: (name: string, email: string, password: string) => void;
@@ -42,29 +44,36 @@ const saveUsersToStorage = (users: User[]) => {
   localStorage.setItem(USER_DB_KEY, JSON.stringify(users));
 };
 
-
 // Create the provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // On initial load, check if a user session exists
+  // On initial load, check if a user session exists and initialize DB
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const storedUser = localStorage.getItem('protecthire_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    if (typeof window !== 'undefined') {
+      try {
+        const storedUser = localStorage.getItem(CURRENT_USER_KEY);
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
 
-    // Initialize the user database if it doesn't exist
-    const allUsers = getUsersFromStorage();
-    if (allUsers.length === 0) {
-        // Add some mock users to start with
-        const initialUsers: User[] = [
-            { id: 'client123', name: 'John Doe', email: 'client123@example.com', userType: 'client', password: 'password', imageUrl: 'https://placehold.co/100x100.png' },
-            { id: 'guard456', name: 'Aarav Sharma', email: 'guard456@example.com', userType: 'guard', password: 'password', imageUrl: 'https://placehold.co/100x100.png' },
-        ];
-        saveUsersToStorage(initialUsers);
+        const allUsers = getUsersFromStorage();
+        if (allUsers.length === 0) {
+            const initialUsers: User[] = [
+                { id: 'client123', name: 'John Doe', email: 'client123@example.com', userType: 'client', password: 'password', imageUrl: 'https://placehold.co/100x100.png' },
+                { id: 'guard456', name: 'Aarav Sharma', email: 'guard456@example.com', userType: 'guard', password: 'password', imageUrl: 'https://placehold.co/100x100.png' },
+            ];
+            saveUsersToStorage(initialUsers);
+        }
+      } catch (error) {
+        console.error("Failed to access localStorage or parse user data:", error);
+        // Clear potentially corrupted storage
+        localStorage.removeItem(CURRENT_USER_KEY);
+      } finally {
+        setIsLoading(false);
+      }
     }
   }, []);
 
@@ -73,7 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const foundUser = allUsers.find(u => u.email === email && u.password === password);
     
     if (foundUser) {
-      localStorage.setItem('protecthire_user', JSON.stringify(foundUser));
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(foundUser));
       setUser(foundUser);
       return true;
     }
@@ -81,7 +90,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('protecthire_user');
+    localStorage.removeItem(CURRENT_USER_KEY);
     setUser(null);
     router.push('/login');
   };
@@ -99,7 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const updatedUsers = [...allUsers, newUser];
     saveUsersToStorage(updatedUsers);
     
-    localStorage.setItem('protecthire_user', JSON.stringify(newUser));
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
     setUser(newUser);
   }
 
@@ -116,12 +125,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const updatedUsers = [...allUsers, newUser];
     saveUsersToStorage(updatedUsers);
     
-    localStorage.setItem('protecthire_user', JSON.stringify(newUser));
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
     setUser(newUser);
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, registerClient, registerGuard }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout, registerClient, registerGuard }}>
       {children}
     </AuthContext.Provider>
   );
