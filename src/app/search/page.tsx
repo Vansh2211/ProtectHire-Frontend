@@ -61,7 +61,6 @@ export default function SearchPage() {
     // Simulate loading, data comes from context
     const timer = setTimeout(() => {
       setIsLoading(false);
-      setShowFilters(true); // Show filters by default on desktop
     }, 500); 
 
     return () => clearTimeout(timer);
