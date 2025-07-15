@@ -62,13 +62,20 @@ export const GuardsProvider = ({ children }: { children: ReactNode }) => {
   // On initial load, check if guards exist in localStorage. If not, use initial data.
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedGuards = localStorage.getItem(GUARD_DB_KEY);
-      if (storedGuards) {
-        setGuards(JSON.parse(storedGuards));
-      } else {
+      try {
+        const storedGuards = localStorage.getItem(GUARD_DB_KEY);
+        if (storedGuards) {
+          setGuards(JSON.parse(storedGuards));
+        } else {
+          const initialGuards = getInitialGuards();
+          setGuards(initialGuards);
+          localStorage.setItem(GUARD_DB_KEY, JSON.stringify(initialGuards));
+        }
+      } catch (error) {
+        console.error("Failed to access localStorage or parse guards data:", error);
+        // Fallback to initial data if storage is corrupted
         const initialGuards = getInitialGuards();
         setGuards(initialGuards);
-        localStorage.setItem(GUARD_DB_KEY, JSON.stringify(initialGuards));
       }
     }
   }, []);
