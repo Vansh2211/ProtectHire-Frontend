@@ -18,7 +18,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
@@ -49,17 +48,12 @@ export default function LoginPage() {
   });
 
   function onSubmit(values: FormData) {
-    // In a real app, you would check the user's credentials against a database.
-    // The database would return the user type.
-    // Here, we'll simulate it by logging in as a client for simplicity.
     console.log('Simulating login for:', values.email);
     login('client'); 
   }
 
   function handleGoogleSignIn() {
     console.log('Simulating Google sign in for a client');
-    // In a real app, this would trigger the Firebase Google Auth flow.
-    // For now, we'll just log in as a client.
     login('client');
   }
 
