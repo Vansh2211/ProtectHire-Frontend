@@ -11,9 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase } from 'lucide-react';
-import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getCurrentLocation, type Location } from '@/services/geolocation'; 
 import { useGuards, type Guard } from '@/context/GuardsContext';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -34,9 +32,8 @@ const availableRoles = ["All Roles", "Security Guard", "Bouncer", "Event Securit
 const availableSkills = ['cpr', 'first_aid', 'crowd_control', 'vip_protection']; // Example skills
 
 export default function SearchPage() {
-  const { guards } = useGuards();
+  const { guards, isLoading } = useGuards();
   const [filteredGuards, setFilteredGuards] = useState<Guard[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
     location: '',
     role: 'All Roles',
@@ -46,25 +43,6 @@ export default function SearchPage() {
     skills: [],
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [userLocation, setUserLocation] = useState<Location | null>(null);
-
-  useEffect(() => {
-    getCurrentLocation()
-      .then(location => {
-        setUserLocation(location);
-        console.log("User location:", location);
-      })
-      .catch(error => {
-        console.error("Error getting location:", error);
-      });
-
-    // Simulate loading, data comes from context
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500); 
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // Apply filters whenever filters or guards from context change
    useEffect(() => {

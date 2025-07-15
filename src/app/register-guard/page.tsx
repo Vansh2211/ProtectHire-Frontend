@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -19,12 +20,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserPlus, ShieldCheck } from 'lucide-react';
+import { UserPlus, ShieldCheck, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useGuards } from '@/context/GuardsContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { sendWelcomeEmail } from '@/services/emailService';
 import { useAuth } from '@/context/AuthContext';
 
 // Preprocessing for optional number fields to handle empty strings
@@ -45,12 +43,12 @@ const formSchema = z.object({
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   phone: z.string().min(10, { message: 'Phone number must be at least 10 digits.' }).regex(/^\+?[0-9\s-]+$/, {message: "Invalid phone number format."}),
   role: z.string({ required_error: 'Please select a primary role.' }),
-  experienceYears: z.coerce.number().min(0, { message: 'Experience must be a positive number.' }),
+  experience: z.coerce.number().min(0, { message: 'Experience must be a positive number.' }),
   hourlyRate: emptyStringToUndefined,
   dailyRate: emptyStringToUndefined,
   monthlyRate: emptyStringToUndefined,
   bio: z.string().max(500, { message: 'Bio must not exceed 500 characters.' }).optional(),
-  certifications: z.string().optional(),
+  skills: z.string().optional(),
   location: z.string().min(2, { message: 'Location is required.' }),
   profilePicture: z
     .any()
@@ -74,9 +72,8 @@ const roles = ["Security Guard", "Bouncer", "Event Security", "Bodyguard", "Care
 
 export default function RegisterGuardPage() {
   const { toast } = useToast();
-  const router = useRouter();
-  const { addGuard } = useGuards();
   const { registerGuard } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -85,41 +82,52 @@ export default function RegisterGuardPage() {
       email: '',
       password: '',
       phone: '',
-      experienceYears: 0,
+      experience: 0,
       bio: '',
-      certifications: '',
+      skills: '',
       location: '',
       agreeTerms: false,
       profilePicture: undefined,
     },
   });
 
-  function onSubmit(values: FormData) {
-    const file = values.profilePicture[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageDataUrl = reader.result as string;
-        const { profilePicture, agreeTerms, email, password, phone, ...guardData } = values;
+  async function onSubmit(values: FormData) {
+    setIsLoading(true);
+    
+    // Create a FormData object to send multipart data
+    const formData = new FormData();
+    
+    // Append all form fields to the FormData object
+    // The keys should match what your Spring Boot backend expects
+    formData.append('fullName', values.fullName);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    formData.append('phone', values.phone);
+    formData.append('role', values.role);
+    formData.append('experience', values.experience.toString());
+    formData.append('location', values.location);
+    if (values.hourlyRate) formData.append('hourlyRate', values.hourlyRate.toString());
+    if (values.dailyRate) formData.append('dailyRate', values.dailyRate.toString());
+    if (values.monthlyRate) formData.append('monthlyRate', values.monthlyRate.toString());
+    if (values.bio) formData.append('bio', values.bio);
+    if (values.skills) formData.append('skills', values.skills);
+    
+    // Append the file
+    if (values.profilePicture && values.profilePicture.length > 0) {
+      formData.append('profilePicture', values.profilePicture[0]);
+    }
 
-        // Add guard to the "database"
-        addGuard({ ...guardData, profilePictureUrl: imageDataUrl });
-        
-        // Register and log in the user
-        registerGuard(values.fullName, values.email, values.password, imageDataUrl);
-
-        // Send a welcome email
-        sendWelcomeEmail(values.email, values.fullName);
-
-        toast({
-          title: 'Registration Successful!',
-          description: 'Your profile has been created and is now live.',
-          variant: 'default',
-        });
-        
-        router.push('/search'); // Redirect to search page
-      };
-      reader.readAsDataURL(file);
+    try {
+      await registerGuard(formData);
+      // AuthContext will handle redirect on success
+    } catch (error: any) {
+      toast({
+        title: 'Registration Failed',
+        description: error.message || 'Could not create profile. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -219,7 +227,7 @@ export default function RegisterGuardPage() {
                 />
                 <FormField
                   control={form.control}
-                  name="experienceYears"
+                  name="experience"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Years of Experience</FormLabel>
@@ -300,7 +308,7 @@ export default function RegisterGuardPage() {
 
               <FormField
                 control={form.control}
-                name="certifications"
+                name="skills"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Certifications / Skills</FormLabel>
@@ -391,9 +399,9 @@ export default function RegisterGuardPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                <ShieldCheck className="mr-2 h-5 w-5" />
-                Register Profile
+              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg" disabled={isLoading}>
+                 {isLoading ? <Loader2 className="animate-spin" /> : <ShieldCheck className="mr-2 h-5 w-5" />}
+                 {isLoading ? 'Creating Profile...' : 'Register Profile'}
               </Button>
             </form>
           </Form>

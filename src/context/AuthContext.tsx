@@ -1,137 +1,118 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import apiFetch from '@/lib/api';
 
-// This is our in-memory "user database". In a real app, this would be a database.
-const USER_DB_KEY = 'protecthire_users';
-const CURRENT_USER_KEY = 'protecthire_user';
+const AUTH_TOKEN_KEY = 'authToken';
+const USER_DATA_KEY = 'protecthire_user';
 
-// Define the User type
+// Define the User type - This should match the user object returned by your backend
 interface User {
   id: string;
   name: string;
   email: string;
   userType: 'client' | 'guard' | 'company';
   imageUrl?: string;
-  password?: string; // Note: Storing passwords in localStorage is INSECURE. This is for simulation only.
 }
 
 // Define the context shape
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  registerClient: (name: string, email: string, password: string) => void;
-  registerGuard: (name: string, email: string, password: string, imageUrl: string) => void;
+  registerClient: (name: string, email: string, password: string) => Promise<void>;
+  registerGuard: (formData: FormData) => Promise<void>;
 }
 
 // Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Helper function to get users from localStorage
-const getUsersFromStorage = (): User[] => {
-  if (typeof window === 'undefined') return [];
-  const users = localStorage.getItem(USER_DB_KEY);
-  return users ? JSON.parse(users) : [];
-};
-
-// Helper function to save users to localStorage
-const saveUsersToStorage = (users: User[]) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(USER_DB_KEY, JSON.stringify(users));
-};
-
 // Create the provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // On initial load, check if a user session exists and initialize DB
-  useEffect(() => {
+  const loadUserFromStorage = useCallback(() => {
     if (typeof window !== 'undefined') {
       try {
-        const storedUser = localStorage.getItem(CURRENT_USER_KEY);
-        if (storedUser) {
+        const storedToken = localStorage.getItem(AUTH_TOKEN_KEY);
+        const storedUser = localStorage.getItem(USER_DATA_KEY);
+        if (storedToken && storedUser) {
+          setToken(storedToken);
           setUser(JSON.parse(storedUser));
         }
-
-        const allUsers = getUsersFromStorage();
-        if (allUsers.length === 0) {
-            const initialUsers: User[] = [
-                { id: 'client123', name: 'John Doe', email: 'client123@example.com', userType: 'client', password: 'password', imageUrl: 'https://placehold.co/100x100.png' },
-                { id: 'guard456', name: 'Aarav Sharma', email: 'guard456@example.com', userType: 'guard', password: 'password', imageUrl: 'https://placehold.co/100x100.png' },
-            ];
-            saveUsersToStorage(initialUsers);
-        }
       } catch (error) {
-        console.error("Failed to access localStorage or parse user data:", error);
-        // Clear potentially corrupted storage
-        localStorage.removeItem(CURRENT_USER_KEY);
+        console.error("Failed to parse user data from storage:", error);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(USER_DATA_KEY);
       } finally {
         setIsLoading(false);
       }
     }
   }, []);
 
-  const login = (email: string, password: string): boolean => {
-    const allUsers = getUsersFromStorage();
-    const foundUser = allUsers.find(u => u.email === email && u.password === password);
-    
-    if (foundUser) {
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(foundUser));
-      setUser(foundUser);
-      return true;
-    }
-    return false;
+  useEffect(() => {
+    loadUserFromStorage();
+  }, [loadUserFromStorage]);
+
+  const handleAuthSuccess = (data: { token: string; user: User }) => {
+    localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(data.user));
+    setToken(data.token);
+    setUser(data.user);
+    router.push('/');
   };
 
+  const login = async (email: string, password: string) => {
+    const response = await apiFetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+    handleAuthSuccess(response);
+  };
+
+  const registerClient = async (name: string, email: string, password: string) => {
+     const response = await apiFetch('/api/auth/register/client', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password }),
+    });
+    handleAuthSuccess(response);
+  };
+
+  const registerGuard = async (formData: FormData) => {
+      // For multipart/form-data, we don't set Content-Type header
+      // The browser will set it automatically with the correct boundary
+      const response = await fetch('http://localhost:8080/api/auth/register/guard', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred.' }));
+        throw new Error(errorData.message || `API Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      handleAuthSuccess(data);
+  }
+
   const logout = () => {
-    localStorage.removeItem(CURRENT_USER_KEY);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(USER_DATA_KEY);
     setUser(null);
+    setToken(null);
     router.push('/login');
   };
 
-  const registerClient = (name: string, email: string, password: string) => {
-    const allUsers = getUsersFromStorage();
-    const newUser: User = {
-      id: `client_${new Date().getTime()}`,
-      name,
-      email,
-      userType: 'client',
-      password,
-      imageUrl: 'https://placehold.co/100x100.png',
-    }
-    const updatedUsers = [...allUsers, newUser];
-    saveUsersToStorage(updatedUsers);
-    
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
-    setUser(newUser);
-  }
-
-  const registerGuard = (name: string, email: string, password: string, imageUrl: string) => {
-    const allUsers = getUsersFromStorage();
-    const newUser: User = {
-      id: `guard_${new Date().getTime()}`,
-      name,
-      email,
-      userType: 'guard',
-      password,
-      imageUrl: imageUrl,
-    }
-    const updatedUsers = [...allUsers, newUser];
-    saveUsersToStorage(updatedUsers);
-    
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
-    setUser(newUser);
-  }
-
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout, registerClient, registerGuard }}>
-      {children}
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout, registerClient, registerGuard }}>
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 };

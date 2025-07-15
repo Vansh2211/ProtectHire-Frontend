@@ -20,32 +20,39 @@ import { useAuth } from '@/context/AuthContext';
 import {
   ArrowLeft,
   Calendar as CalendarIcon,
-  User,
   MapPin,
-  Clock,
-  CreditCard,
-  AlertCircle,
   Send,
   Loader2,
+  AlertCircle,
 } from 'lucide-react';
-import Image from 'next/image';
 import { ProtectHireLogo } from '@/components/ProtectHireLogo';
+import apiFetch from '@/lib/api';
 
 export default function BookingPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
-  const { guards } = useGuards();
+  const { guards, isLoading: guardsLoading } = useGuards();
   const guardId = params.id as string;
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
+  
+  const [guard, setGuard] = useState(guards.find(g => g.id === guardId));
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!authLoading && !user) {
       router.push('/login');
     }
-  }, [user, isLoading, router]);
+  }, [user, authLoading, router]);
 
-  const guard = guards.find(g => g.id === guardId);
+  useEffect(() => {
+      if (!guardsLoading && !guard) {
+          // If guards are loaded but we still don't have this one, it might be a direct link.
+          // In a real app, you'd fetch the specific guard's data here.
+          // For now, we rely on the context.
+          setGuard(guards.find(g => g.id === guardId))
+      }
+  }, [guards, guardsLoading, guard, guardId])
+
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [startTime, setStartTime] = useState('09:00');
@@ -63,36 +70,76 @@ export default function BookingPage() {
     const from = new Date(dateRange.from);
     const to = new Date(dateRange.to);
 
-    // Calculate number of days
     const diffTime = Math.abs(to.getTime() - from.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-    // Calculate hours per day
     const start = new Date(`1970-01-01T${startTime}:00`);
     const end = new Date(`1970-01-01T${endTime}:00`);
     let hoursPerDay = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
     if(hoursPerDay < 0) hoursPerDay = 24 + hoursPerDay;
 
-
     totalHours = diffDays * hoursPerDay;
     
-    // Use daily rate if booking is for a full day (8 hours or more) and it's cheaper
     if (guard.dailyRate && hoursPerDay >= 8 && guard.dailyRate < (guard.hourlyRate || Infinity) * hoursPerDay) {
         return guard.dailyRate * diffDays;
     }
     
-    // Otherwise use hourly rate
     if(guard.hourlyRate) {
         return totalHours * guard.hourlyRate;
     }
 
-    // Fallback if no hourly rate
     return guard.dailyRate ? guard.dailyRate * diffDays : 0;
 
   }, [dateRange, startTime, endTime, guard]);
 
-  if (isLoading || !user) {
-    // Render a loading state or nothing while checking auth
+  const handleRequestSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if(!dateRange?.from || !address || !user) {
+          toast({
+              title: "Missing Information",
+              description: "Please select a date, provide the service address, and ensure you're logged in.",
+              variant: "destructive",
+          })
+          return;
+      }
+
+      setIsSubmitting(true);
+      
+      const bookingData = {
+          guardId: guard?.id,
+          clientId: user.id,
+          startDate: format(dateRange.from, 'yyyy-MM-dd'),
+          endDate: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : format(dateRange.from, 'yyyy-MM-dd'),
+          startTime,
+          endTime,
+          address,
+          instructions,
+          estimatedCost: bookingCost,
+      };
+
+      try {
+        await apiFetch('/api/bookings', {
+            method: 'POST',
+            body: JSON.stringify(bookingData),
+        });
+
+        toast({
+            title: "Booking Request Sent!",
+            description: `Your request has been sent to ${guard?.name}. You will be notified upon their approval.`
+        });
+        router.push('/search');
+      } catch (error: any) {
+         toast({
+            title: "Booking Failed",
+            description: error.message || "Could not send the booking request. Please try again.",
+            variant: "destructive"
+        })
+      } finally {
+        setIsSubmitting(false);
+      }
+  }
+
+  if (authLoading || guardsLoading) {
     return (
         <div className="flex justify-center items-center h-screen">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -111,29 +158,6 @@ export default function BookingPage() {
         </Button>
       </div>
     );
-  }
-  
-  const handleRequestSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      if(!dateRange?.from || !address) {
-          toast({
-              title: "Missing Information",
-              description: "Please select a date and provide the service address.",
-              variant: "destructive",
-          })
-          return;
-      }
-
-      setIsSubmitting(true);
-      // Simulate API call to send request
-      setTimeout(() => {
-        setIsSubmitting(false);
-        toast({
-            title: "Booking Request Sent!",
-            description: `Your request has been sent to ${guard.name}. You will be notified upon their approval.`
-        });
-        router.push('/search'); // Redirect to search or a confirmation page
-      }, 2000);
   }
 
   return (
@@ -214,8 +238,8 @@ export default function BookingPage() {
                     </CardContent>
                     <CardFooter>
                         <Button type="submit" size="lg" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting}>
-                            {isSubmitting ? 'Sending Request...' : 'Send Booking Request'}
-                            <Send className="ml-2 h-4 w-4"/>
+                            {isSubmitting ? <Loader2 className="animate-spin" /> : 'Send Booking Request'}
+                             {!isSubmitting && <Send className="ml-2 h-4 w-4"/>}
                         </Button>
                     </CardFooter>
                 </form>

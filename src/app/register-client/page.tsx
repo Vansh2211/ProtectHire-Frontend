@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -16,12 +17,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Checkbox } from '@/components/ui/checkbox';
-import { sendWelcomeEmail } from '@/services/emailService';
-import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -36,7 +36,8 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function RegisterClientPage() {
   const { registerClient } = useAuth();
-  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -48,11 +49,20 @@ export default function RegisterClientPage() {
     },
   });
 
-  // This is a simulated registration. In a real app, you'd call your auth API.
-  function onSubmit(values: FormData) {
-    registerClient(values.fullName, values.email, values.password);
-    sendWelcomeEmail(values.email, values.fullName);
-    router.push('/account'); // Redirect to account page after successful registration
+  async function onSubmit(values: FormData) {
+    setIsLoading(true);
+    try {
+        await registerClient(values.fullName, values.email, values.password);
+        // AuthContext will redirect on success
+    } catch (error: any) {
+        toast({
+            title: 'Registration Failed',
+            description: error.message || 'Could not create account. Please try again.',
+            variant: 'destructive',
+        });
+    } finally {
+        setIsLoading(false);
+    }
   }
 
   return (
@@ -143,9 +153,9 @@ export default function RegisterClientPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                <UserPlus className="mr-2 h-5 w-5" />
-                Create Account
+              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg" disabled={isLoading}>
+                {isLoading ? <Loader2 className="animate-spin" /> : <UserPlus className="mr-2 h-5 w-5" />}
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
           </Form>

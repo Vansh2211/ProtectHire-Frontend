@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -15,11 +16,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LogIn } from 'lucide-react';
+import { LogIn, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
@@ -40,8 +40,8 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const router = useRouter();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -51,24 +51,29 @@ export default function LoginPage() {
     },
   });
 
-  function onSubmit(values: FormData) {
-    const success = login(values.email, values.password);
-    if(success) {
-      router.push('/');
-    } else {
+  async function onSubmit(values: FormData) {
+    setIsLoading(true);
+    try {
+      await login(values.email, values.password);
+      // On success, the AuthContext will handle the redirect.
+    } catch (error: any) {
       toast({
         title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
+        description: error.message || "Invalid email or password. Please try again.",
         variant: "destructive"
-      })
+      });
+    } finally {
+        setIsLoading(false);
     }
   }
 
   function handleGoogleSignIn() {
-    const success = login('client123@example.com', 'password'); // Simulate google login for mock client
-    if (success) {
-      router.push('/');
-    }
+    // This would be replaced with your actual Google Sign-In logic
+    // which would call your backend's Google auth endpoint.
+    toast({
+        title: "Google Sign-In",
+        description: "This is a placeholder for Google Sign-In.",
+    });
   }
 
   return (
@@ -114,9 +119,9 @@ export default function LoginPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                <LogIn className="mr-2 h-5 w-5" />
-                Log In
+              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg" disabled={isLoading}>
+                {isLoading ? <Loader2 className="animate-spin" /> : <LogIn className="mr-2 h-5 w-5" />}
+                {isLoading ? 'Logging in...' : 'Log In'}
               </Button>
             </form>
           </Form>

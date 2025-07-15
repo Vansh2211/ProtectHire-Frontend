@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -19,10 +20,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2 } from 'lucide-react';
+import { Building2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { sendWelcomeEmail } from '@/services/emailService';
 import { useRouter } from 'next/navigation';
+import apiFetch from '@/lib/api';
 
 
 const formSchema = z.object({
@@ -30,6 +31,7 @@ const formSchema = z.object({
     message: 'Company name must be at least 2 characters.',
   }),
   email: z.string().email({ message: 'Invalid email address.' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   website: z.string().url({ message: 'Invalid URL.' }).optional().or(z.literal('')),
   location: z.string().min(2, { message: 'Location is required.' }),
   description: z.string().max(1000, { message: 'Description must not exceed 1000 characters.' }).optional(),
@@ -43,11 +45,14 @@ type FormData = z.infer<typeof formSchema>;
 export default function RegisterCompanyPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       companyName: '',
       email: '',
+      password: '',
       website: '',
       location: '',
       description: '',
@@ -55,16 +60,30 @@ export default function RegisterCompanyPage() {
     },
   });
 
-  function onSubmit(values: FormData) {
-    // TODO: Implement actual company registration logic (e.g., API call)
-    console.log(values);
-    sendWelcomeEmail(values.email, values.companyName);
-    toast({
-      title: 'Company Registration Submitted!',
-      description: 'Your company profile is being created. We will be in touch soon.',
-      variant: 'default',
-    });
-    router.push('/');
+  async function onSubmit(values: FormData) {
+    setIsLoading(true);
+    const { agreeTerms, ...submissionData } = values;
+    try {
+        // We assume the backend handles creating the company user and profile
+        await apiFetch('/api/auth/register/company', {
+            method: 'POST',
+            body: JSON.stringify(submissionData),
+        });
+
+        toast({
+          title: 'Company Registration Submitted!',
+          description: 'Your company profile has been created. Please log in.',
+        });
+        router.push('/login'); // Redirect to login after successful registration
+    } catch(error: any) {
+        toast({
+          title: 'Registration Failed',
+          description: error.message || 'Could not create company profile. Please try again.',
+          variant: 'destructive',
+        });
+    } finally {
+        setIsLoading(false);
+    }
   }
 
   return (
@@ -111,12 +130,12 @@ export default function RegisterCompanyPage() {
                 />
                 <FormField
                   control={form.control}
-                  name="website"
+                  name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Company Website (Optional)</FormLabel>
+                      <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://example.com" {...field} />
+                        <Input type="password" placeholder="••••••••" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -137,6 +156,19 @@ export default function RegisterCompanyPage() {
                   </FormItem>
                 )}
               />
+               <FormField
+                  control={form.control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Website (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
               <FormField
                 control={form.control}
@@ -188,9 +220,9 @@ export default function RegisterCompanyPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg">
-                <Building2 className="mr-2 h-5 w-5" />
-                Register Company Profile
+              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" size="lg" disabled={isLoading}>
+                {isLoading ? <Loader2 className="animate-spin" /> : <Building2 className="mr-2 h-5 w-5" />}
+                {isLoading ? 'Registering...' : 'Register Company Profile'}
               </Button>
             </form>
           </Form>
