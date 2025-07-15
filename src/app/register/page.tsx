@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGuards } from '@/context/GuardsContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { sendWelcomeEmail } from '@/services/emailService';
 
 // Preprocessing for optional number fields to handle empty strings
 const emptyStringToUndefined = z.preprocess((val) => {
@@ -98,6 +99,7 @@ export default function RegisterPage() {
         const { profilePicture, agreeTerms, email, phone, ...guardData } = values;
 
         addGuard({ ...guardData, profilePictureUrl: imageDataUrl });
+        sendWelcomeEmail(values.email, values.fullName);
 
         toast({
           title: 'Registration Successful!',
@@ -375,4 +377,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-

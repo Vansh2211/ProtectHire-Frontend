@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2 } from 'lucide-react';
 import Link from 'next/link';
+import { sendWelcomeEmail } from '@/services/emailService';
 
 
 const formSchema = z.object({
@@ -54,6 +56,7 @@ export default function RegisterCompanyPage() {
   function onSubmit(values: FormData) {
     // TODO: Implement actual company registration logic (e.g., API call)
     console.log(values);
+    sendWelcomeEmail(values.email, values.companyName);
     toast({
       title: 'Company Registration Submitted!',
       description: 'Your company profile is being created. We will be in touch soon.',

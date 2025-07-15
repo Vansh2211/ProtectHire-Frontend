@@ -20,6 +20,7 @@ import { UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Checkbox } from '@/components/ui/checkbox';
+import { sendWelcomeEmail } from '@/services/emailService';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -49,6 +50,7 @@ export default function RegisterClientPage() {
   function onSubmit(values: FormData) {
     console.log('Simulating client registration:', values);
     registerClient(values.fullName, values.email);
+    sendWelcomeEmail(values.email, values.fullName);
   }
 
   return (
