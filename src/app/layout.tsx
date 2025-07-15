@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Header"; // Import Header
 import { GuardsProvider } from "@/context/GuardsContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,14 +27,16 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <GuardsProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <Header /> {/* Add Header */}
-            <main className="flex-1">{children}</main>
-            {/* Optional: Add a Footer component here */}
-          </div>
-          <Toaster />
-        </GuardsProvider>
+        <AuthProvider>
+          <GuardsProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <Header /> {/* Add Header */}
+              <main className="flex-1">{children}</main>
+              {/* Optional: Add a Footer component here */}
+            </div>
+            <Toaster />
+          </GuardsProvider>
+        </AuthProvider>
       </body>
     </html>
   );
