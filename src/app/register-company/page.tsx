@@ -22,6 +22,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Building2 } from 'lucide-react';
 import Link from 'next/link';
 import { sendWelcomeEmail } from '@/services/emailService';
+import { useRouter } from 'next/navigation';
 
 
 const formSchema = z.object({
@@ -41,6 +42,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function RegisterCompanyPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,7 +64,7 @@ export default function RegisterCompanyPage() {
       description: 'Your company profile is being created. We will be in touch soon.',
       variant: 'default',
     });
-    // form.reset();
+    router.push('/');
   }
 
   return (

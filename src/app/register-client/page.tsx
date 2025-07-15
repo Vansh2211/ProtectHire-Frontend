@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Checkbox } from '@/components/ui/checkbox';
 import { sendWelcomeEmail } from '@/services/emailService';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
@@ -35,6 +36,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function RegisterClientPage() {
   const { registerClient } = useAuth();
+  const router = useRouter();
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -48,9 +50,9 @@ export default function RegisterClientPage() {
 
   // This is a simulated registration. In a real app, you'd call your auth API.
   function onSubmit(values: FormData) {
-    console.log('Simulating client registration:', values);
-    registerClient(values.fullName, values.email);
+    registerClient(values.fullName, values.email, values.password);
     sendWelcomeEmail(values.email, values.fullName);
+    router.push('/account'); // Redirect to account page after successful registration
   }
 
   return (

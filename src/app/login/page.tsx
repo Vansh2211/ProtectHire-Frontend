@@ -18,6 +18,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
@@ -38,6 +40,8 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -48,13 +52,23 @@ export default function LoginPage() {
   });
 
   function onSubmit(values: FormData) {
-    console.log('Simulating login for:', values.email);
-    login('client'); 
+    const success = login(values.email, values.password);
+    if(success) {
+      router.push('/account');
+    } else {
+      toast({
+        title: "Login Failed",
+        description: "Invalid email or password. Please try again.",
+        variant: "destructive"
+      })
+    }
   }
 
   function handleGoogleSignIn() {
-    console.log('Simulating Google sign in for a client');
-    login('client');
+    const success = login('client123@example.com', 'password'); // Simulate google login for mock client
+    if (success) {
+      router.push('/account');
+    }
   }
 
   return (

@@ -25,6 +25,7 @@ import { useRouter } from 'next/navigation';
 import { useGuards } from '@/context/GuardsContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { sendWelcomeEmail } from '@/services/emailService';
+import { useAuth } from '@/context/AuthContext';
 
 // Preprocessing for optional number fields to handle empty strings
 const emptyStringToUndefined = z.preprocess((val) => {
@@ -41,6 +42,7 @@ const formSchema = z.object({
     message: 'Full name must be at least 2 characters.',
   }),
   email: z.string().email({ message: 'Invalid email address.' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   phone: z.string().min(10, { message: 'Phone number must be at least 10 digits.' }).regex(/^\+?[0-9\s-]+$/, {message: "Invalid phone number format."}),
   role: z.string({ required_error: 'Please select a primary role.' }),
   experienceYears: z.coerce.number().min(0, { message: 'Experience must be a positive number.' }),
@@ -74,12 +76,14 @@ export default function RegisterGuardPage() {
   const { toast } = useToast();
   const router = useRouter();
   const { addGuard } = useGuards();
+  const { registerGuard } = useAuth();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: '',
       email: '',
+      password: '',
       phone: '',
       experienceYears: 0,
       bio: '',
@@ -96,9 +100,15 @@ export default function RegisterGuardPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         const imageDataUrl = reader.result as string;
-        const { profilePicture, agreeTerms, email, phone, ...guardData } = values;
+        const { profilePicture, agreeTerms, email, password, phone, ...guardData } = values;
 
+        // Add guard to the "database"
         addGuard({ ...guardData, profilePictureUrl: imageDataUrl });
+        
+        // Register and log in the user
+        registerGuard(values.fullName, values.email, values.password, imageDataUrl);
+
+        // Send a welcome email
         sendWelcomeEmail(values.email, values.fullName);
 
         toast({
@@ -106,7 +116,8 @@ export default function RegisterGuardPage() {
           description: 'Your profile has been created and is now live.',
           variant: 'default',
         });
-        router.push('/search');
+        
+        router.push('/search'); // Redirect to search page
       };
       reader.readAsDataURL(file);
     }
@@ -168,6 +179,20 @@ export default function RegisterGuardPage() {
                   )}
                 />
               </div>
+
+               <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <FormField
