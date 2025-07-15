@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -8,22 +9,28 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase } from 'lucide-react';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getCurrentLocation, type Location } from '@/services/geolocation'; 
 import { useGuards, type Guard } from '@/context/GuardsContext';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 
 // Define types
 interface Filters {
   location: string;
+  role: string;
   maxRate: number;
   minRating: number;
   minExperience: number;
   skills: string[];
 }
+
+const availableRoles = ["All Roles", "Security Guard", "Bouncer", "Event Security", "Bodyguard", "Caretaker"];
+const availableSkills = ['cpr', 'first_aid', 'crowd_control', 'vip_protection']; // Example skills
 
 export default function SearchPage() {
   const { guards } = useGuards();
@@ -31,7 +38,8 @@ export default function SearchPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
     location: '',
-    maxRate: 1000, // Default max hourly rate in INR
+    role: 'All Roles',
+    maxRate: 2000, // Default max hourly rate in INR
     minRating: 0,
     minExperience: 0,
     skills: [],
@@ -52,6 +60,7 @@ export default function SearchPage() {
     // Simulate loading, data comes from context
     const timer = setTimeout(() => {
       setIsLoading(false);
+      setShowFilters(true); // Show filters by default on desktop
     }, 500); 
 
     return () => clearTimeout(timer);
@@ -67,6 +76,11 @@ export default function SearchPage() {
         result = result.filter(guard =>
           guard.location.toLowerCase().includes(filters.location.toLowerCase())
         );
+      }
+      
+      // Role filter
+      if (filters.role !== 'All Roles') {
+        result = result.filter(guard => guard.role === filters.role);
       }
 
       // Max Rate Filter (applies only to hourly rate)
@@ -93,6 +107,10 @@ export default function SearchPage() {
   const handleFilterChange = (key: keyof Filters, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
+  
+  const handleRoleChange = (value: string) => {
+      handleFilterChange('role', value);
+  }
 
    const handleSkillChange = (skill: string, checked: boolean | string) => {
      const isChecked = typeof checked === 'boolean' ? checked : checked === 'indeterminate' ? false : true; // Handle CheckboxState
@@ -104,11 +122,21 @@ export default function SearchPage() {
      }));
    };
 
-  const availableSkills = ['cpr', 'first_aid', 'crowd_control', 'vip_protection']; // Example skills
+  const resetFilters = () => {
+    setFilters({
+      location: '',
+      role: 'All Roles',
+      maxRate: 2000,
+      minRating: 0,
+      minExperience: 0,
+      skills: [],
+    })
+  }
+
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Find Security Guards</h1>
+      <h1 className="text-3xl font-bold mb-6">Find Security Professionals</h1>
 
       {/* Search Bar and Filter Toggle */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -123,7 +151,7 @@ export default function SearchPage() {
            />
         </div>
 
-        <Button onClick={() => setShowFilters(!showFilters)} variant="outline">
+        <Button onClick={() => setShowFilters(!showFilters)} variant="outline" className="lg:hidden">
           <SlidersHorizontal className="mr-2 h-4 w-4" />
           {showFilters ? 'Hide Filters' : 'Show Filters'}
         </Button>
@@ -132,12 +160,27 @@ export default function SearchPage() {
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar (conditionally rendered) */}
-        {showFilters && (
-            <Card className="w-full lg:w-1/4 lg:sticky lg:top-20 h-fit shadow-md">
+        <div className={`${showFilters ? 'block' : 'hidden'} lg:block`}>
+            <Card className="w-full lg:w-72 lg:sticky lg:top-24 h-fit shadow-md">
               <CardHeader>
                 <CardTitle>Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
+                 {/* Role Filter */}
+                <div>
+                  <Label htmlFor="role-filter" className="mb-2 block">Role</Label>
+                  <Select value={filters.role} onValueChange={handleRoleChange}>
+                    <SelectTrigger id="role-filter" className="w-full">
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableRoles.map(role => (
+                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 {/* Max Hourly Rate Filter */}
                  <div>
                     <Label htmlFor="maxRate" className="mb-2 block">Max Hourly Rate: ₹{filters.maxRate}</Label>
@@ -148,7 +191,6 @@ export default function SearchPage() {
                         step={50}
                         value={[filters.maxRate]}
                         onValueChange={(value) => handleFilterChange('maxRate', value[0])}
-                        className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4" // Smaller thumb
                     />
                  </div>
 
@@ -162,7 +204,6 @@ export default function SearchPage() {
                         step={0.1}
                         value={[filters.minRating]}
                         onValueChange={(value) => handleFilterChange('minRating', value[0])}
-                        className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4" // Smaller thumb
                     />
                  </div>
 
@@ -176,7 +217,6 @@ export default function SearchPage() {
                         step={1}
                         value={[filters.minExperience]}
                         onValueChange={(value) => handleFilterChange('minExperience', value[0])}
-                        className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4" // Smaller thumb
                     />
                  </div>
 
@@ -201,26 +241,22 @@ export default function SearchPage() {
                   </div>
                 </div>
 
-                 {/* TODO: Add Availability Filter (Date Picker) */}
-
               </CardContent>
               <CardFooter>
-                  <Button onClick={() => setFilters({ location: '', maxRate: 1000, minRating: 0, minExperience: 0, skills: [] })} variant="outline" className="w-full">
+                  <Button onClick={resetFilters} variant="outline" className="w-full">
                     Reset Filters
                   </Button>
               </CardFooter>
             </Card>
-        )}
+        </div>
 
         {/* Guard Results */}
-        <div className={`flex-grow ${showFilters ? 'lg:w-3/4' : 'w-full'}`}>
+        <div className="flex-grow">
            {isLoading ? (
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
                     <Card key={i} className="overflow-hidden">
-                       <CardHeader className="p-0 h-48">
-                          <Skeleton className="h-full w-full" />
-                       </CardHeader>
+                       <Skeleton className="h-48 w-full" />
                        <CardContent className="p-4 space-y-2">
                           <Skeleton className="h-6 w-3/4" />
                           <Skeleton className="h-4 w-1/2" />
@@ -233,7 +269,7 @@ export default function SearchPage() {
                 ))}
              </div>
           ) : filteredGuards.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredGuards.map(guard => (
                 <Card key={guard.id} className="overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 flex flex-col">
                   <CardHeader className="p-0 relative h-48">
@@ -249,6 +285,7 @@ export default function SearchPage() {
                        <Star className="w-3 h-3 mr-1 fill-yellow-400 text-yellow-400" />
                        {guard.rating.toFixed(1)}
                      </div>
+                      <Badge variant="default" className="absolute top-2 left-2 bg-accent text-accent-foreground">{guard.role}</Badge>
                   </CardHeader>
                   <CardContent className="p-4 flex-grow">
                     <CardTitle className="text-xl mb-1">{guard.name}</CardTitle>
@@ -256,21 +293,18 @@ export default function SearchPage() {
                       <MapPin className="w-4 h-4 mr-1" /> {guard.location}
                     </CardDescription>
                      <div className="text-sm text-muted-foreground mb-3 space-y-1">
-                       <p>Experience: {guard.experience} years</p>
+                       <p className="flex items-center"><Briefcase className="w-4 h-4 mr-2" /> {guard.experience} years experience</p>
                        <div>
-                         <p className="font-medium text-foreground">Rates:</p>
                          {guard.hourlyRate && <p className="pl-2">₹{guard.hourlyRate}/hr</p>}
-                         {guard.dailyRate && <p className="pl-2">₹{guard.dailyRate}/day</p>}
-                         {guard.monthlyRate && <p className="pl-2">₹{guard.monthlyRate}/month</p>}
-                         {!guard.hourlyRate && !guard.dailyRate && !guard.monthlyRate && <p className="pl-2">Contact for rates</p>}
                        </div>
                     </div>
-                     <div className="flex flex-wrap gap-1">
-                        {guard.skills.map(skill => (
+                     <div className="flex flex-wrap gap-1 h-12 overflow-hidden">
+                        {guard.skills.slice(0, 3).map(skill => (
                             <span key={skill} className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full capitalize">
                                 {skill.replace('_', ' ')}
                             </span>
                         ))}
+                         {guard.skills.length > 3 && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">...</span>}
                      </div>
                   </CardContent>
                   <CardFooter className="p-4 border-t">
@@ -284,9 +318,9 @@ export default function SearchPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 text-muted-foreground">
+            <div className="text-center py-16 text-muted-foreground col-span-full">
                <ShieldCheck className="mx-auto h-12 w-12 mb-4" />
-               <p className="text-lg font-semibold">No Guards Found</p>
+               <p className="text-lg font-semibold">No Professionals Found</p>
                <p>Try adjusting your search filters or broadening your location.</p>
             </div>
           )}

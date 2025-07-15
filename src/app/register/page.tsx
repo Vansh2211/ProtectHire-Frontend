@@ -23,6 +23,7 @@ import { UserPlus, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useGuards } from '@/context/GuardsContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Preprocessing for optional number fields to handle empty strings
 const emptyStringToUndefined = z.preprocess((val) => {
@@ -40,6 +41,7 @@ const formSchema = z.object({
   }),
   email: z.string().email({ message: 'Invalid email address.' }),
   phone: z.string().min(10, { message: 'Phone number must be at least 10 digits.' }).regex(/^\+?[0-9\s-]+$/, {message: "Invalid phone number format."}),
+  role: z.string({ required_error: 'Please select a primary role.' }),
   experienceYears: z.coerce.number().min(0, { message: 'Experience must be a positive number.' }),
   hourlyRate: emptyStringToUndefined,
   dailyRate: emptyStringToUndefined,
@@ -64,6 +66,8 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
+
+const roles = ["Security Guard", "Bouncer", "Event Security", "Bodyguard", "Caretaker"];
 
 export default function RegisterPage() {
   const { toast } = useToast();
@@ -113,7 +117,7 @@ export default function RegisterPage() {
            <div className="mb-4 flex justify-center">
               <UserPlus className="h-12 w-12 text-primary" />
            </div>
-          <CardTitle className="text-3xl font-bold">Register as a Guard</CardTitle>
+          <CardTitle className="text-3xl font-bold">Register as a Professional</CardTitle>
           <CardDescription>
             Join ProtectHire and start getting booked for security jobs. Fill out your profile below.
           </CardDescription>
@@ -162,21 +166,45 @@ export default function RegisterPage() {
                   )}
                 />
               </div>
-
-               <FormField
-                control={form.control}
-                name="experienceYears"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Years of Experience</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="0" placeholder="e.g., 5" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Primary Role</FormLabel>
+                       <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your primary role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {roles.map(role => (
+                            <SelectItem key={role} value={role}>{role}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="experienceYears"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Years of Experience</FormLabel>
+                      <FormControl>
+                        <Input type="number" min="0" placeholder="e.g., 5" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <div>
                 <FormLabel>Rates (₹)</FormLabel>
                 <FormDescription>
@@ -347,3 +375,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

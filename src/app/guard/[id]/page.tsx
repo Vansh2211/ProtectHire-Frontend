@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-import { ArrowLeft, MapPin, Star, Briefcase, DollarSign, Calendar, MessageSquare } from 'lucide-react';
+import { ArrowLeft, MapPin, Star, Briefcase, DollarSign, Calendar, MessageSquare, Shield } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
@@ -53,6 +53,7 @@ export default function GuardProfilePage() {
                         />
                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                          <div className="absolute bottom-0 left-0 p-6">
+                            <Badge variant="default" className="mb-2 bg-accent text-accent-foreground">{guard.role}</Badge>
                             <h1 className="text-4xl font-bold text-white">{guard.name}</h1>
                             <div className="flex items-center text-lg text-gray-200 mt-1">
                                 <MapPin className="w-5 h-5 mr-2" />
