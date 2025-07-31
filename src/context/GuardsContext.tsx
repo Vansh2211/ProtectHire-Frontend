@@ -34,6 +34,7 @@ const GuardsContext = createContext<GuardsContextType | undefined>(undefined);
 export const GuardsProvider = ({ children }: { children: ReactNode }) => {
   const [guards, setGuards] = useState<Guard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false); // New state to prevent refetching on error
 
   const fetchGuards = useCallback(async () => {
     setIsLoading(true);
@@ -42,16 +43,20 @@ export const GuardsProvider = ({ children }: { children: ReactNode }) => {
       const data = await apiFetch('/api/guards');
       setGuards(data || []);
     } catch (error) {
-      console.error("Failed to fetch guards:", error);
-      setGuards([]); // Set to empty array on error
+      console.error("Failed to fetch guards (this is expected if backend is not running):", error);
+      setGuards([]); // Set to empty array on error to prevent crash
     } finally {
       setIsLoading(false);
+      setLoaded(true); // Mark as loaded even if it failed
     }
   }, []);
 
   useEffect(() => {
-    fetchGuards();
-  }, [fetchGuards]);
+    // Only fetch if we haven't attempted to load the data yet
+    if (!loaded) {
+      fetchGuards();
+    }
+  }, [fetchGuards, loaded]);
 
 
   return (
