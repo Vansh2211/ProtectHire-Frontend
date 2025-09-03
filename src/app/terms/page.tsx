@@ -1,3 +1,4 @@
+
 export default function TermsPage() {
   return (
     <div className="container mx-auto max-w-3xl py-12 px-4">
@@ -18,17 +19,24 @@ export default function TermsPage() {
           access the Service.
         </p>
 
-        <h2>1. Service Description</h2>
+        <h2>1. Service Description & Role of ProtectHire</h2>
         <p>
-          ProtectHire is a platform that connects individuals and businesses
+          ProtectHire is a technology platform that connects individuals and businesses
           (&quot;Clients&quot;) seeking security services with independent security
           professionals, including guards and bouncers (&quot;Guards&quot;). We
           provide tools for Guards to create profiles, Clients to search for
           Guards, and facilitate communication and booking arrangements.
-          ProtectHire is a neutral venue and does not employ Guards directly, nor
-          does it guarantee the quality, safety, or legality of the services
-          provided by Guards or the requests made by Clients.
         </p>
+        <p>
+          <strong>
+            ProtectHire acts as a marketplace and is not an employer of Guards.
+          </strong>
+          Guards are independent contractors who are solely responsible for their
+          professional conduct. We do not guarantee the quality, safety, or
+          legality of the services provided by Guards or the requests made by
+          Clients.
+        </p>
+
 
         <h2>2. Account Registration</h2>
         <p>
@@ -40,38 +48,67 @@ export default function TermsPage() {
           actions under your account.
         </p>
 
-        <h2>3. User Conduct</h2>
+        <h2>3. Guard / Bouncer Agreement & Responsibilities</h2>
         <p>
-          You agree not to use the Service for any unlawful purpose or in any
-          way that interrupts, damages, or impairs the service. You agree to
-          treat other users with respect and professionalism. Harassment, abuse,
-          or discrimination will not be tolerated.
+          By registering as a Guard on ProtectHire, you agree to the following terms:
         </p>
-        <p>
-          Guards are responsible for ensuring they have the necessary licenses,
-          certifications, and insurance required by law to provide security
-          services in their jurisdiction. Clients are responsible for verifying
-          Guard credentials to their satisfaction.
-        </p>
+        <ul>
+          <li>
+            <strong>No Criminal Background:</strong> You declare that you have no
+            criminal background or any pending criminal cases against you. You
+            understand that providing false information will result in immediate
+            termination and blacklisting from the platform.
+          </li>
+          <li>
+            <strong>Personal Responsibility:</strong> You accept full personal
+            and legal responsibility for your actions while on duty for a job
+            sourced through ProtectHire. You acknowledge that you are an
+            independent contractor, not an employee of ProtectHire.
+          </li>
+           <li>
+            <strong>Compliance:</strong> You are responsible for ensuring you have the necessary licenses,
+            certifications, and insurance required by law to provide security
+            services in your jurisdiction.
+          </li>
+          <li>
+            <strong>Cooperation:</strong> You agree to allow ProtectHire to share
+            your verification documents with law enforcement authorities if
+            required for an investigation.
+          </li>
+          <li>
+            <strong>Consequences of Misconduct:</strong> You understand that if you
+            commit any crime or engage in serious misconduct, you will be
+            immediately blacklisted from the platform, and ProtectHire may
+            pursue legal escalation.
+          </li>
+        </ul>
 
-        <h2>4. Bookings and Payments (Placeholder)</h2>
-        <p>
-          [This section will detail the process for booking Guards, payment terms,
-          cancellation policies, and dispute resolution. Specifics about payment
-          processing, service fees, and invoicing will be included here once the
-          payment system is implemented.]
+        <h2>4. Client Agreement & Responsibilities</h2>
+         <p>
+          By booking a Guard through ProtectHire, you agree to the following terms:
         </p>
+        <ul>
+            <li>
+                You acknowledge that ProtectHire provides access to verified professionals but is not the employer of these individuals.
+            </li>
+            <li>
+                You acknowledge that the Guard is an independent contractor, responsible for their own actions.
+            </li>
+             <li>
+                You agree that ProtectHire is not liable for theft, assault, misconduct, breach of property, or any other illegal act committed by the hired individual. Your engagement with a Guard is at your own risk.
+            </li>
+             <li>
+                You are responsible for verifying a Guard's credentials to your own satisfaction before they begin their service.
+            </li>
+        </ul>
+
 
         <h2>5. Disclaimers</h2>
         <p>
           The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis.
           ProtectHire makes no representations or warranties of any kind, express
           or implied, as to the operation of the Service or the information,
-          content, or materials included therein. We do not screen or vet users
-          beyond the information provided during registration and do not guarantee
-          the accuracy of user profiles or the suitability, reliability, or
-          quality of any Guard or Client. You engage with other users at your
-          own risk.
+          content, or materials included therein. While we have processes for profile verification, we do not guarantee the complete accuracy of user profiles or the suitability, reliability, or quality of any Guard or Client.
         </p>
 
         <h2>6. Limitation of Liability</h2>
@@ -82,16 +119,14 @@ export default function TermsPage() {
           without limitation, loss of profits, data, use, goodwill, or other
           intangible losses, resulting from (i) your access to or use of or
           inability to access or use the Service; (ii) any conduct or content of
-          any third party on the Service; (iii) any content obtained from the
+          any third party on the Service, including any illegal acts committed by a Guard; (iii) any content obtained from the
           Service; and (iv) unauthorized access, use, or alteration of your
-          transmissions or content, whether based on warranty, contract, tort
-          (including negligence), or any other legal theory, whether or not we
-          have been informed of the possibility of such damage.
+          transmissions or content.
         </p>
 
          <h2>7. Indemnification</h2>
         <p>
-         You agree to defend, indemnify and hold harmless ProtectHire and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not to attorney's fees), resulting from or arising out of a) your use and access of the Service, by you or any person using your account and password, or b) a breach of these Terms.
+         You agree to defend, indemnify and hold harmless ProtectHire and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees), resulting from or arising out of a) your use and access of the Service, by you or any person using your account and password, or b) a breach of these Terms.
         </p>
 
 

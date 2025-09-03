@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, UserPlus, Building2, Handshake, ClipboardList, ShieldQuestion, Briefcase } from "lucide-react";
@@ -81,6 +82,10 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
+           <div className="mt-12 text-center text-sm text-muted-foreground bg-secondary p-4 rounded-lg">
+             <p className="font-semibold">Platform Disclaimer</p>
+             <p>ProtectHire acts as a marketplace to connect clients with security professionals. All professionals undergo strict verification. However, ProtectHire is not responsible for any misconduct or criminal acts committed by individuals while on duty.</p>
+           </div>
         </div>
       </section>
 

@@ -59,7 +59,7 @@ const formSchema = z.object({
       'Only .jpg, .jpeg, .png and .webp formats are supported.'
     ),
   agreeTerms: z.boolean().refine((val) => val === true, {
-    message: 'You must agree to the terms and conditions.',
+    message: 'You must agree to the terms and the guard agreement.',
   }),
 }).refine(data => data.hourlyRate != null || data.dailyRate != null || data.monthlyRate != null, {
     message: "Please provide at least one rate (hourly, daily, or monthly).",
@@ -380,10 +380,10 @@ export default function RegisterGuardPage() {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>
-                        Agree to terms and conditions
+                        I declare I have no criminal background and agree to the Guard Agreement.
                       </FormLabel>
                       <FormDescription>
-                        You agree to our{' '}
+                        By checking this box, you confirm you have no criminal record and accept full personal liability for your actions. You also agree to our full{' '}
                         <Link href="/terms" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
                           Terms of Service
                         </Link>{' '}

@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { ProtectHireLogo } from '@/components/ProtectHireLogo';
 import apiFetch from '@/lib/api';
+import Link from 'next/link';
 
 export default function BookingPage() {
   const params = useParams();
@@ -286,11 +287,11 @@ export default function BookingPage() {
                     </div>
                 </CardContent>
             </Card>
-            <Alert>
+            <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>This is a Booking Request</AlertTitle>
+              <AlertTitle>Client Agreement</AlertTitle>
               <AlertDescription>
-                The guard must approve your request before the booking is confirmed. Payment will be processed after confirmation.
+                By booking, you agree to our <Link href="/terms" className="underline font-semibold" target="_blank">Terms of Service</Link>. ProtectHire is a marketplace and is not liable for the conduct of independent professionals.
               </AlertDescription>
             </Alert>
           </div>
