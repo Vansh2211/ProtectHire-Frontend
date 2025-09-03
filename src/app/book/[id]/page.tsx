@@ -26,7 +26,6 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { ProtectHireLogo } from '@/components/ProtectHireLogo';
-import apiFetch from '@/lib/api';
 import Link from 'next/link';
 
 export default function BookingPage() {
@@ -119,10 +118,9 @@ export default function BookingPage() {
       };
 
       try {
-        await apiFetch('/api/bookings', {
-            method: 'POST',
-            body: JSON.stringify(bookingData),
-        });
+        // MOCK API CALL
+        console.log("Submitting booking data:", bookingData);
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         toast({
             title: "Booking Request Sent!",

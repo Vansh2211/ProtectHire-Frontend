@@ -23,7 +23,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Building2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import apiFetch from '@/lib/api';
 
 
 const formSchema = z.object({
@@ -62,13 +61,10 @@ export default function RegisterCompanyPage() {
 
   async function onSubmit(values: FormData) {
     setIsLoading(true);
-    const { agreeTerms, ...submissionData } = values;
     try {
-        // We assume the backend handles creating the company user and profile
-        await apiFetch('/api/auth/register/company', {
-            method: 'POST',
-            body: JSON.stringify(submissionData),
-        });
+        // MOCK API Call
+        console.log("Registering company:", values);
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         toast({
           title: 'Company Registration Submitted!',

@@ -3,18 +3,20 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import apiFetch from '@/lib/api';
+import { useGuards } from './GuardsContext';
 
 const AUTH_TOKEN_KEY = 'authToken';
 const USER_DATA_KEY = 'protecthire_user';
+const ALL_USERS_KEY = 'protecthire_all_users';
 
-// Define the User type - This should match the user object returned by your backend
+// Define the User type
 interface User {
   id: string;
   name: string;
   email: string;
   userType: 'client' | 'guard' | 'company';
   imageUrl?: string;
+  password?: string; // Only for mock purposes
 }
 
 // Define the context shape
@@ -37,6 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const guardsContext = useGuards();
+
 
   const loadUserFromStorage = useCallback(() => {
     if (typeof window !== 'undefined') {
@@ -61,45 +65,83 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loadUserFromStorage();
   }, [loadUserFromStorage]);
 
-  const handleAuthSuccess = (data: { token: string; user: User }) => {
-    localStorage.setItem(AUTH_TOKEN_KEY, data.token);
-    localStorage.setItem(USER_DATA_KEY, JSON.stringify(data.user));
-    setToken(data.token);
-    setUser(data.user);
+  const handleAuthSuccess = (user: User) => {
+    const mockToken = `mock-token-for-${user.id}`;
+    localStorage.setItem(AUTH_TOKEN_KEY, mockToken);
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+    setToken(mockToken);
+    setUser(user);
     router.push('/');
   };
 
   const login = async (email: string, password: string) => {
-    const response = await apiFetch('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
-    handleAuthSuccess(response);
+    const allUsers: User[] = JSON.parse(localStorage.getItem(ALL_USERS_KEY) || '[]');
+    const foundUser = allUsers.find(u => u.email === email && u.password === password);
+
+    if (foundUser) {
+      handleAuthSuccess(foundUser);
+    } else {
+      throw new Error('Invalid email or password.');
+    }
   };
 
   const registerClient = async (name: string, email: string, password: string) => {
-     const response = await apiFetch('/api/auth/register/client', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password }),
-    });
-    handleAuthSuccess(response);
+    const allUsers: User[] = JSON.parse(localStorage.getItem(ALL_USERS_KEY) || '[]');
+    if (allUsers.some(u => u.email === email)) {
+        throw new Error('An account with this email already exists.');
+    }
+    
+    const newUser: User = {
+        id: `client-${Date.now()}`,
+        name,
+        email,
+        password,
+        userType: 'client'
+    };
+    
+    allUsers.push(newUser);
+    localStorage.setItem(ALL_USERS_KEY, JSON.stringify(allUsers));
+    handleAuthSuccess(newUser);
   };
 
   const registerGuard = async (formData: FormData) => {
-      // For multipart/form-data, we don't set Content-Type header
-      // The browser will set it automatically with the correct boundary
-      const response = await fetch('http://localhost:8080/api/auth/register/guard', {
-        method: 'POST',
-        body: formData,
-      });
+      const allUsers: User[] = JSON.parse(localStorage.getItem(ALL_USERS_KEY) || '[]');
+      const email = formData.get('email') as string;
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred.' }));
-        throw new Error(errorData.message || `API Error: ${response.statusText}`);
+      if (allUsers.some(u => u.email === email)) {
+        throw new Error('An account with this email already exists.');
       }
+      
+      const newGuardUser: User = {
+          id: `guard-${Date.now()}`,
+          name: formData.get('fullName') as string,
+          email: email,
+          password: formData.get('password') as string,
+          userType: 'guard'
+      };
+      
+      allUsers.push(newGuardUser);
+      localStorage.setItem(ALL_USERS_KEY, JSON.stringify(allUsers));
 
-      const data = await response.json();
-      handleAuthSuccess(data);
+      // Also add to the guards list in GuardsContext
+      const skillsValue = formData.get('skills') as string;
+      const newGuardProfile = {
+        id: newGuardUser.id,
+        name: newGuardUser.name,
+        role: formData.get('role') as string,
+        experience: Number(formData.get('experience')),
+        location: formData.get('location') as string,
+        hourlyRate: formData.get('hourlyRate') ? Number(formData.get('hourlyRate')) : undefined,
+        dailyRate: formData.get('dailyRate') ? Number(formData.get('dailyRate')) : undefined,
+        monthlyRate: formData.get('monthlyRate') ? Number(formData.get('monthlyRate')) : undefined,
+        bio: formData.get('bio') as string || undefined,
+        skills: skillsValue ? skillsValue.split(',').map(s => s.trim()) : [],
+        rating: Math.random() * (5 - 4) + 4, // Random rating between 4.0 and 5.0
+        profilePictureUrl: "https://placehold.co/300x200.png"
+      };
+
+      guardsContext.addGuard(newGuardProfile);
+      handleAuthSuccess(newGuardUser);
   }
 
   const logout = () => {
@@ -112,7 +154,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, token, isLoading, login, logout, registerClient, registerGuard }}>
-      {!isLoading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
