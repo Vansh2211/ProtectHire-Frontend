@@ -66,11 +66,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [loadUserFromStorage]);
 
   const handleAuthSuccess = (user: User) => {
+    const { password, ...userToStore } = user; // Exclude password from stored user object
     const mockToken = `mock-token-for-${user.id}`;
     localStorage.setItem(AUTH_TOKEN_KEY, mockToken);
-    localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(userToStore));
     setToken(mockToken);
-    setUser(user);
+    setUser(userToStore);
     router.push('/');
   };
 
