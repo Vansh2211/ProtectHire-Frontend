@@ -135,7 +135,7 @@ export default function Home() {
            </div>
            <div className="flex items-start gap-4">
              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10z"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="M18 19a2 2 0 0 0 2-2v-1.5"/><path d="m6 19-2-2"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0_0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10z"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="M18 19a2 2 0 0 0 2-2v-1.5"/><path d="m6 19-2-2"/></svg>
              </div>
              <div>
                 <h3 className="text-lg font-semibold">Notifications</h3>
@@ -171,12 +171,12 @@ export default function Home() {
             </div>
              <div className="order-1 md:order-2">
                <Image
-                  src="https://picsum.photos/seed/female-guard-professional/600/400"
+                  src="https://picsum.photos/seed/woman-security/600/400"
                   alt="SheShield female security professional"
                   width={600}
                   height={400}
                   className="rounded-lg shadow-xl"
-                  data-ai-hint="professional female security"
+                  data-ai-hint="professional woman"
                 />
             </div>
           </div>
