@@ -11,13 +11,13 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase, RadioGroup } from 'lucide-react';
+import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGuards, type Guard } from '@/context/GuardsContext';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { ProtectHireLogo } from '@/components/ProtectHireLogo';
-import { RadioGroupItem } from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 
 // Define types
