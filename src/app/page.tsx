@@ -146,9 +146,9 @@ export default function Home() {
       </section>
 
       {/* SheShield Section */}
-      <section className="w-full bg-pink-500/10 py-16 md:py-24">
+      <section className="w-full py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid items-center gap-12 md:grid-cols-2">
+          <div className="rounded-lg border border-pink-500/30 bg-pink-500/10 p-8 grid items-center gap-12 md:grid-cols-2">
             <div className="order-2 md:order-1">
               <div className="mb-4 flex items-center gap-3">
                   <HeartHandshake className="h-8 w-8 text-pink-500" />
