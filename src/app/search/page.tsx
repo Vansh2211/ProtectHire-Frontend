@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase } from 'lucide-react';
+import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase, HeartHandshake } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGuards, type Guard } from '@/context/GuardsContext';
 import Link from 'next/link';
@@ -183,7 +183,7 @@ export default function SearchPage() {
                     <RadioGroup
                         value={filters.gender}
                         onValueChange={(value) => handleFilterChange('gender', value)}
-                        className="flex space-x-4"
+                        className="space-y-2"
                     >
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="any" id="gender-any" />
@@ -191,7 +191,10 @@ export default function SearchPage() {
                         </div>
                         <div className="flex items-center space-x-2">
                             <RadioGroupItem value="female" id="gender-female" />
-                            <Label htmlFor="gender-female">Female</Label>
+                            <div className="flex items-center gap-2">
+                                <Label htmlFor="gender-female">Female</Label>
+                                <Badge variant="outline" className="border-pink-500 text-pink-500">SheShield</Badge>
+                            </div>
                         </div>
                          <div className="flex items-center space-x-2">
                             <RadioGroupItem value="male" id="gender-male" />
@@ -300,6 +303,12 @@ export default function SearchPage() {
                        {guard.rating.toFixed(1)}
                      </div>
                       <Badge variant="default" className="absolute top-2 left-2 bg-accent text-accent-foreground">{guard.role}</Badge>
+                      {guard.gender === 'female' && (
+                        <Badge variant="outline" className="absolute bottom-2 left-2 bg-pink-500/10 border-pink-500 text-pink-600">
+                          <HeartHandshake className="w-3 h-3 mr-1" />
+                          SheShield
+                        </Badge>
+                      )}
                   </CardHeader>
                   <CardContent className="p-4 flex-grow">
                     <CardTitle className="text-xl mb-1">{guard.name}</CardTitle>
