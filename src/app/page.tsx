@@ -169,15 +169,8 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-             <div className="order-1 md:order-2">
-               <Image
-                  src="https://picsum.photos/seed/woman-security/600/400"
-                  alt="SheShield female security professional"
-                  width={600}
-                  height={400}
-                  className="rounded-lg shadow-xl"
-                  data-ai-hint="professional woman"
-                />
+             <div className="order-1 flex items-center justify-center md:order-2">
+               <ProtectHireLogo className="h-64 w-64 text-pink-300" />
             </div>
           </div>
         </div>
