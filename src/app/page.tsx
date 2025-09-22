@@ -35,45 +35,6 @@ export default function Home() {
         </div>
       </section>
 
-        {/* SheShield Section */}
-      <section className="w-full bg-background py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid items-center gap-12 md:grid-cols-2">
-            <div className="order-2 md:order-1">
-              <div className="mb-4 flex items-center gap-3">
-                  <HeartHandshake className="h-8 w-8 text-pink-500" />
-                  <h2 className="text-3xl font-bold tracking-tight md:text-4xl">SheShield</h2>
-              </div>
-              <p className="mb-2 text-xl font-semibold text-muted-foreground">Safety, by women, for women.</p>
-              <p className="mb-6 text-lg text-muted-foreground">
-                Introducing ‘SheShield’, a dedicated network of trained, verified female security professionals available on demand. Women can book a female guard as a companion or escort for travel, events, or any situation where they need additional safety.
-              </p>
-              <ul className="mb-8 space-y-3 text-muted-foreground">
-                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Empowering women with safe companionship and peace of mind.</span></li>
-                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Creating employment opportunities for skilled female security personnel.</span></li>
-                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Filling a critical gap for culturally sensitive and discreet security needs.</span></li>
-              </ul>
-              <Button asChild size="lg" className="bg-pink-500 text-white hover:bg-pink-600">
-                <Link href="/search?gender=female">
-                  Find a Female Guard
-                </Link>
-              </Button>
-            </div>
-             <div className="order-1 md:order-2">
-               <Image
-                  src="https://picsum.photos/seed/femaleguard/600/400"
-                  alt="SheShield female security professional"
-                  width={600}
-                  height={400}
-                  className="rounded-lg shadow-xl"
-                  data-ai-hint="female security guard"
-                />
-            </div>
-          </div>
-        </div>
-      </section>
-
-
       {/* How it Works Section */}
       <section className="w-full py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
@@ -121,10 +82,6 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-           <div className="mt-12 text-center text-sm text-muted-foreground bg-background/50 p-4 rounded-lg">
-             <p className="font-semibold">Platform Disclaimer</p>
-             <p>ProtectHire acts as a marketplace to connect clients with security professionals. All professionals undergo strict verification. However, ProtectHire is not responsible for any misconduct or criminal acts committed by individuals while on duty.</p>
-           </div>
         </div>
       </section>
 
@@ -188,8 +145,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SheShield Section */}
+      <section className="w-full bg-pink-500/10 py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid items-center gap-12 md:grid-cols-2">
+            <div className="order-2 md:order-1">
+              <div className="mb-4 flex items-center gap-3">
+                  <HeartHandshake className="h-8 w-8 text-pink-500" />
+                  <h2 className="text-3xl font-bold tracking-tight md:text-4xl">SheShield</h2>
+              </div>
+              <p className="mb-2 text-xl font-semibold text-muted-foreground">Safety, by women, for women.</p>
+              <p className="mb-6 text-lg text-muted-foreground">
+                Introducing ‘SheShield’, a dedicated network of trained, verified female security professionals available on demand. Women can book a female guard as a companion or escort for travel, events, or any situation where they need additional safety.
+              </p>
+              <ul className="mb-8 space-y-3 text-muted-foreground">
+                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Empowering women with safe companionship and peace of mind.</span></li>
+                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Creating employment opportunities for skilled female security personnel.</span></li>
+                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Filling a critical gap for culturally sensitive and discreet security needs.</span></li>
+              </ul>
+              <Button asChild size="lg" className="bg-pink-500 text-white hover:bg-pink-600">
+                <Link href="/search?gender=female">
+                  Find a Female Guard
+                </Link>
+              </Button>
+            </div>
+             <div className="order-1 md:order-2">
+               <Image
+                  src="https://picsum.photos/seed/female-guard-professional/600/400"
+                  alt="SheShield female security professional"
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-xl"
+                  data-ai-hint="professional female security"
+                />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Why ProtectHire Section */}
-      <section className="w-full bg-secondary py-16 md:py-24">
+      <section className="w-full bg-background py-16 md:py-24">
         <div className="container mx-auto px-4">
            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight md:text-4xl">
             Why ProtectHire is Essential
@@ -228,14 +223,18 @@ export default function Home() {
                 </ul>
             </div>
           </div>
+           <div className="mt-12 text-center text-sm text-muted-foreground bg-secondary p-4 rounded-lg">
+             <p className="font-semibold">Platform Disclaimer</p>
+             <p>ProtectHire acts as a marketplace to connect clients with security professionals. All professionals undergo strict verification. However, ProtectHire is not responsible for any misconduct or criminal acts committed by individuals while on duty.</p>
+           </div>
         </div>
       </section>
 
         {/* Call to Action Section */}
-      <section className="w-full bg-background py-16 md:py-24">
+      <section className="w-full bg-gradient-to-r from-slate-900 to-slate-800 py-16 md:py-24 text-primary-foreground">
          <div className="container mx-auto flex flex-col items-center px-4 text-center">
              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Ready to get started?</h2>
-             <p className="mb-8 max-w-xl text-lg text-muted-foreground">
+             <p className="mb-8 max-w-xl text-lg text-slate-300">
                 Whether you need security or you are security, ProtectHire connects you.
              </p>
              <div className="flex flex-col gap-4 sm:flex-row sm:space-x-4 sm:space-y-0">
@@ -244,7 +243,7 @@ export default function Home() {
                          <Search className="mr-2 h-5 w-5" /> Find a Guard Now
                      </Link>
                  </Button>
-                 <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                 <Button asChild size="lg" variant="outline" className="border-accent text-accent bg-transparent hover:bg-accent hover:text-accent-foreground">
                       <Link href="/register">
                          <UserPlus className="mr-2 h-5 w-5" /> Join the Platform
                      </Link>
@@ -256,3 +255,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
