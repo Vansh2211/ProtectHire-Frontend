@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,12 +11,13 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase } from 'lucide-react';
+import { MapPin, Star, ShieldCheck, Search as SearchIcon, SlidersHorizontal, Briefcase, RadioGroup } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGuards, type Guard } from '@/context/GuardsContext';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { ProtectHireLogo } from '@/components/ProtectHireLogo';
+import { RadioGroupItem } from '@/components/ui/radio-group';
 
 
 // Define types
@@ -26,6 +28,7 @@ interface Filters {
   minRating: number;
   minExperience: number;
   skills: string[];
+  gender: 'any' | 'male' | 'female';
 }
 
 const availableRoles = ["All Roles", "Security Guard", "Bouncer", "Event Security", "Bodyguard", "Caretaker"];
@@ -33,6 +36,7 @@ const availableSkills = ['cpr', 'first_aid', 'crowd_control', 'vip_protection'];
 
 export default function SearchPage() {
   const { guards, isLoading } = useGuards();
+  const searchParams = useSearchParams();
   const [filteredGuards, setFilteredGuards] = useState<Guard[]>([]);
   const [filters, setFilters] = useState<Filters>({
     location: '',
@@ -41,8 +45,17 @@ export default function SearchPage() {
     minRating: 0,
     minExperience: 0,
     skills: [],
+    gender: 'any',
   });
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    const genderQueryParam = searchParams.get('gender');
+    if (genderQueryParam === 'female' || genderQueryParam === 'male') {
+      handleFilterChange('gender', genderQueryParam);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   // Apply filters whenever filters or guards from context change
    useEffect(() => {
@@ -70,6 +83,10 @@ export default function SearchPage() {
        // Min Experience Filter
       result = result.filter(guard => guard.experience >= filters.minExperience);
 
+      // Gender Filter
+      if (filters.gender !== 'any') {
+        result = result.filter(guard => guard.gender === filters.gender);
+      }
 
       // Skills Filter
       if (filters.skills.length > 0) {
@@ -108,6 +125,7 @@ export default function SearchPage() {
       minRating: 0,
       minExperience: 0,
       skills: [],
+      gender: 'any',
     })
   }
 
@@ -158,6 +176,29 @@ export default function SearchPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                
+                 {/* Gender Filter */}
+                 <div>
+                    <Label className="mb-2 block">Gender</Label>
+                    <RadioGroup
+                        value={filters.gender}
+                        onValueChange={(value) => handleFilterChange('gender', value)}
+                        className="flex space-x-4"
+                    >
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="any" id="gender-any" />
+                            <Label htmlFor="gender-any">Any</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="female" id="gender-female" />
+                            <Label htmlFor="gender-female">Female</Label>
+                        </div>
+                         <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="male" id="gender-male" />
+                            <Label htmlFor="gender-male">Male</Label>
+                        </div>
+                    </RadioGroup>
+                 </div>
 
                 {/* Max Hourly Rate Filter */}
                  <div>

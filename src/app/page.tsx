@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, UserPlus, Building2, Handshake, ClipboardList, ShieldQuestion, Briefcase } from "lucide-react";
+import { Search, UserPlus, Building2, Handshake, ClipboardList, ShieldQuestion, Briefcase, HeartHandshake } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { ProtectHireLogo } from "@/components/ProtectHireLogo";
@@ -35,8 +35,47 @@ export default function Home() {
         </div>
       </section>
 
+        {/* SheShield Section */}
+      <section className="w-full bg-background py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid items-center gap-12 md:grid-cols-2">
+            <div className="order-2 md:order-1">
+              <div className="mb-4 flex items-center gap-3">
+                  <HeartHandshake className="h-8 w-8 text-pink-500" />
+                  <h2 className="text-3xl font-bold tracking-tight md:text-4xl">SheShield</h2>
+              </div>
+              <p className="mb-2 text-xl font-semibold text-muted-foreground">Safety, by women, for women.</p>
+              <p className="mb-6 text-lg text-muted-foreground">
+                Introducing ‘SheShield’, a dedicated network of trained, verified female security professionals available on demand. Women can book a female guard as a companion or escort for travel, events, or any situation where they need additional safety.
+              </p>
+              <ul className="mb-8 space-y-3 text-muted-foreground">
+                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Empowering women with safe companionship and peace of mind.</span></li>
+                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Creating employment opportunities for skilled female security personnel.</span></li>
+                  <li className="flex items-start"><span className="mr-3 mt-1.5 h-2 w-2 rounded-full bg-pink-500"></span><span>Filling a critical gap for culturally sensitive and discreet security needs.</span></li>
+              </ul>
+              <Button asChild size="lg" className="bg-pink-500 text-white hover:bg-pink-600">
+                <Link href="/search?gender=female">
+                  Find a Female Guard
+                </Link>
+              </Button>
+            </div>
+             <div className="order-1 md:order-2">
+               <Image
+                  src="https://picsum.photos/seed/femaleguard/600/400"
+                  alt="SheShield female security professional"
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-xl"
+                  data-ai-hint="female security guard"
+                />
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* How it Works Section */}
-      <section className="w-full py-16 md:py-24">
+      <section className="w-full py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <h2 className="mb-12 text-center text-3xl font-bold tracking-tight md:text-4xl">
             How It Works
@@ -82,7 +121,7 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-           <div className="mt-12 text-center text-sm text-muted-foreground bg-secondary p-4 rounded-lg">
+           <div className="mt-12 text-center text-sm text-muted-foreground bg-background/50 p-4 rounded-lg">
              <p className="font-semibold">Platform Disclaimer</p>
              <p>ProtectHire acts as a marketplace to connect clients with security professionals. All professionals undergo strict verification. However, ProtectHire is not responsible for any misconduct or criminal acts committed by individuals while on duty.</p>
            </div>
@@ -90,7 +129,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="w-full bg-secondary py-16 md:py-24">
+      <section className="w-full bg-background py-16 md:py-24">
         <div className="container mx-auto grid gap-12 px-4 md:grid-cols-2 lg:grid-cols-3">
            <div className="flex items-start gap-4">
              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -150,7 +189,7 @@ export default function Home() {
       </section>
 
       {/* Why ProtectHire Section */}
-      <section className="w-full py-16 md:py-24">
+      <section className="w-full bg-secondary py-16 md:py-24">
         <div className="container mx-auto px-4">
            <h2 className="mb-12 text-center text-3xl font-bold tracking-tight md:text-4xl">
             Why ProtectHire is Essential
@@ -193,7 +232,7 @@ export default function Home() {
       </section>
 
         {/* Call to Action Section */}
-      <section className="w-full bg-secondary py-16 md:py-24">
+      <section className="w-full bg-background py-16 md:py-24">
          <div className="container mx-auto flex flex-col items-center px-4 text-center">
              <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Ready to get started?</h2>
              <p className="mb-8 max-w-xl text-lg text-muted-foreground">

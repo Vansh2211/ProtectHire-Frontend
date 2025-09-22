@@ -11,6 +11,7 @@ export interface Guard {
   name: string;
   role: string;
   location: string;
+  gender?: 'male' | 'female';
   hourlyRate?: number;
   dailyRate?: number;
   monthlyRate?: number;
@@ -28,6 +29,7 @@ const initialGuards: Guard[] = [
     name: 'Sanjay Verma',
     role: 'Security Guard',
     location: 'Mumbai, MH',
+    gender: 'male',
     hourlyRate: 450,
     dailyRate: 3500,
     rating: 4.8,
@@ -41,6 +43,7 @@ const initialGuards: Guard[] = [
     name: 'Amit Singh',
     role: 'Bouncer',
     location: 'Delhi, DL',
+    gender: 'male',
     hourlyRate: 600,
     dailyRate: 5000,
     rating: 4.9,
@@ -54,6 +57,7 @@ const initialGuards: Guard[] = [
     name: 'Priya Sharma',
     role: 'Event Security',
     location: 'Bangalore, KA',
+    gender: 'female',
     hourlyRate: 500,
     dailyRate: 4000,
     rating: 4.7,
@@ -67,6 +71,7 @@ const initialGuards: Guard[] = [
     name: 'Rajesh Kumar',
     role: 'Bodyguard',
     location: 'Mumbai, MH',
+    gender: 'male',
     dailyRate: 10000,
     rating: 5.0,
     experience: 12,
@@ -76,12 +81,41 @@ const initialGuards: Guard[] = [
   },
   {
     id: 'guard-5',
-    name: 'Sunita Devi',
+    name: 'Deepika Rao',
+    role: 'Security Guard',
+    location: 'Pune, MH',
+    gender: 'female',
+    hourlyRate: 520,
+    dailyRate: 4100,
+    rating: 4.9,
+    experience: 6,
+    skills: ['cpr', 'first_aid', 'vip_protection'],
+    bio: 'Professional and vigilant female guard, trained for corporate and personal security details.',
+    profilePictureUrl: "https://placehold.co/300x200.png",
+  },
+  {
+    id: 'guard-6',
+    name: 'Anjali Desai',
+    role: 'Bouncer',
+    location: 'Goa, GA',
+    gender: 'female',
+    hourlyRate: 650,
+    dailyRate: 5500,
+    rating: 4.8,
+    experience: 7,
+    skills: ['crowd_control', 'first_aid'],
+    bio: 'Expert in maintaining a safe and respectful environment in hospitality venues.',
+    profilePictureUrl: "https://placehold.co/300x200.png",
+  },
+  {
+    id: 'guard-7',
+    name: 'Vikram Rathod',
     role: 'Caretaker',
     location: 'Pune, MH',
+    gender: 'male',
     monthlyRate: 25000,
     rating: 4.6,
-    experience: 6,
+    experience: 10,
     skills: ['first_aid'],
     bio: 'Reliable and trustworthy caretaker for property and asset management.',
      profilePictureUrl: "https://placehold.co/300x200.png",
@@ -108,12 +142,18 @@ export const GuardsProvider = ({ children }: { children: ReactNode }) => {
   const fetchGuards = useCallback(() => {
     setIsLoading(true);
     if(typeof window !== 'undefined'){
-        const storedGuards = localStorage.getItem(GUARDS_STORAGE_KEY);
-        if (storedGuards) {
-            setGuards(JSON.parse(storedGuards));
-        } else {
-            setGuards(initialGuards);
-            localStorage.setItem(GUARDS_STORAGE_KEY, JSON.stringify(initialGuards));
+        try {
+            const storedGuards = localStorage.getItem(GUARDS_STORAGE_KEY);
+            if (storedGuards && JSON.parse(storedGuards).length > 0) {
+                setGuards(JSON.parse(storedGuards));
+            } else {
+                setGuards(initialGuards);
+                localStorage.setItem(GUARDS_STORAGE_KEY, JSON.stringify(initialGuards));
+            }
+        } catch (error) {
+             console.error("Failed to parse guards from storage, resetting to initial data.", error);
+             setGuards(initialGuards);
+             localStorage.setItem(GUARDS_STORAGE_KEY, JSON.stringify(initialGuards));
         }
     }
     setIsLoading(false);
@@ -148,4 +188,3 @@ export const useGuards = () => {
   }
   return context;
 };
-
